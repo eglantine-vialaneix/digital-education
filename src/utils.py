@@ -35,14 +35,16 @@ class GradientDescent:
     def set_eta(self, eta_value):
         """Set the learning rate (eta) to the given value."""
         self.eta = eta_value
-        print(f"Using a learning rate eta (η) = {self.eta}")
+        print(f"Using a learning rate eta η = {self.eta}")
 
     def set_a_0(self, a_0_value):
-        """Set the initial point (a_0) to the given value."""
+        """Set the initial point (a₀) to the given value."""
         self.a_0 = a_0_value
-        print(f"Using the initial point a_0: {self.a_0}")
+        print(f"Using the initial point a₀: {self.a_0}")
 
-    def gradient_descent(self):
+    def gradient_descent(self, 
+                         formula = "a_n - self.eta * self.grad_f(a_n)"):
+        
         # Checking requirements before running the algorithm
         assert self.eta is not None, "Please use self.set_eta to define the learning rate before running the algorithm."
         assert self.a_0 is not None, "Please use self.set_a_0 to define the initial point before running the algorithm."
@@ -58,7 +60,7 @@ class GradientDescent:
         
         #perform the algorithm
         for i in range(1, self.max_iter):
-            a_n_1 = a_n - self.eta * self.grad_f(a_n) #TODO: this formula should be modified by the guess of the user
+            a_n_1 =  eval(formula) #TODO: this formula should be modified by the guess of the user
             a_ns[i] = a_n_1
             losses[i] = self.compute_loss(a_n_1)
             a_n = a_n_1

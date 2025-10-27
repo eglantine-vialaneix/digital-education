@@ -4,9 +4,9 @@ from src.utils import GradientDescent
 import random
 
 ###### CONSTANTS AND UTILS ######
-X_MIN = -2
-X_MAX = 2
-eta = 0.1
+st.session_state.X_MIN = -2.0
+st.session_state.X_MAX = 2.0
+st.session_state.eta = 0.1
 
 match_elements = {
     'aₙ': 'a_n', 
@@ -31,7 +31,7 @@ def extract_guessed_formula(string_formula):
 
 ###### STREAMLIT APP ######
 
-st.title("Gradient Descent Formula Builder")
+st.title("Find an algorithm to go down the mountain!")
 
 # Initialize session state for formula if it doesn't exist
 if 'formula' not in st.session_state:
@@ -42,19 +42,19 @@ col1, col2 = st.columns([3, 1])
 with col1:
     init_value = st.number_input(
         "a₀ = ", 
-        min_value=float(X_MIN), 
-        max_value=float(X_MAX), 
+        min_value=st.session_state.X_MIN, 
+        max_value=st.session_state.X_MAX, 
         value=1.5, 
         step=0.1
     )
 with col2:
     if st.button("Random"):
-        st.session_state.random_init = round(random.uniform(X_MIN, X_MAX), 1)
+        init_value = round(random.uniform(st.session_state.X_MIN, st.session_state.X_MAX), 1)
         st.rerun()
 
 # Use random value if set
-if 'random_init' in st.session_state:
-    init_value = st.session_state.random_init
+#if 'random_init' in st.session_state:
+#    init_value = st.session_state.random_init
 
 # Formula display
 st.text_area(
@@ -93,9 +93,9 @@ if run_simulation and st.session_state.formula:
     try:
         guess_formula = extract_guessed_formula(st.session_state.formula)
         
-        GD = GradientDescent(X_MIN, X_MAX)
+        GD = GradientDescent(st.session_state.X_MIN, st.session_state.X_MAX)
         GD.set_a_0(init_value)
-        GD.set_eta(eta)
+        GD.set_eta(st.session_state.eta)
         df_gd = GD.gradient_descent(guess_formula)
         
         # Display the plot

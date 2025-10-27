@@ -213,7 +213,7 @@ class GradientDescent:
 
         fig.show()
         
-        return fig
+        #return fig 
 
 
     def plot_loss(self):

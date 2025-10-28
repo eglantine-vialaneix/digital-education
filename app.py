@@ -14,7 +14,7 @@ st.session_state.ETA_MAX = 100.0
 
 ###################### STREAMLIT APP ######################
 
-st.title("Find an algorithm to go down the mountain!") #TODO: change the title and insert context and instructions
+st.title("Find your way down the mountain!") #TODO: change the title and insert context and instructions
 
 
 ############# USER INPUTS #################

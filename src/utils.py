@@ -7,15 +7,15 @@ from plotly.subplots import make_subplots
 import streamlit as st
 
 
+# 9. Asymmetric bowl
 def f(x):
-    # ultimate goal: find a 2D function
-    return x * x + 0.1 * np.sin(10 * x)
+    return x**2 + 0.5*x
 
 def grad_f(x):
-    return 2 * x + np.cos(10 * x)
+    return 2*x + 0.5
 
 class GradientDescent:
-    def __init__(self, X_MIN, X_MAX, n_pts = 300, max_iter = 15):
+    def __init__(self, X_MIN, X_MAX, n_pts = 400, max_iter = 15):
         # Defining the ranges of x values that the function will take
         # Those are the max and min of the plotted window
         self.X_MIN = X_MIN
@@ -31,6 +31,7 @@ class GradientDescent:
         # Defining the convex function we will be working with
         self.f = f
         self.grad_f = grad_f
+        self.true_min = None
 
 
     def set_eta(self, eta_value):
@@ -61,7 +62,7 @@ class GradientDescent:
         
         #perform the algorithm
         for i in range(1, self.max_iter):
-            a_n_1 =  eval(formula) #TODO: this formula should be modified by the guess of the user
+            a_n_1 =  eval(formula) #this is the formula extracted from the user guess
             a_ns[i] = a_n_1
             losses[i] = self.compute_loss(a_n_1)
             a_n = a_n_1
@@ -75,27 +76,28 @@ class GradientDescent:
     def find_min_f(self):
         # 1D for now but should be 2D later on
         x = np.linspace(self.X_MIN, self.X_MAX, self.n_pts)
-        true_min = min(self.f(x))
-        
-        return true_min
+        true_min = x[np.argmin(self.f(x))]
+        return true_min # returns the x of the actual minimum, not f(x)
+    
+    def set_true_min(self):
+        self.true_min = self.find_min_f()
+        print(f"The actual minimum of f is at x = {self.true_min:.2f} with f(x) = {self.f(self.true_min):.2f}")
     
     def compute_loss(self, x):
-        true_min = self.find_min_f()
-        return abs(x - true_min)
-    
-    
+        if self.true_min is None:
+            self.set_true_min()
+        return abs(self.f(x) - self.f(self.true_min))
     
     
     def plot_iterations_and_loss(self):
-        """Plot the function f and the iterative steps of the proposed algorithm, along with the corresponding losses"
-
-        Args:
-            f (function): convex function
-        """
+        """Plot the function f and the iterative steps of the proposed algorithm, along with the corresponding losses"""
+        
         # Create subplot layout (1 row, 2 columns)
         fig = make_subplots(rows=1, cols=2, subplot_titles=("Gradient Descent Path", "Loss Curve"))
 
         # ===== Left subplot: f(x) + GD path =====
+        
+        # f(x)
         x = np.linspace(self.X_MIN, self.X_MAX, 300)
         fig.add_trace(
             go.Scatter(
@@ -107,6 +109,26 @@ class GradientDescent:
             ),
             row=1, col=1
         )
+        
+        # Circle around true minimum on f 
+        fig.add_trace(
+            go.Scatter(
+                x=[self.true_min],
+                y=[self.f(self.true_min)],
+                mode='markers',
+                marker=dict(
+                    size=15,
+                    color='rgba(144, 238, 144, 0)',  # transparent fill
+                    line=dict(color='lightgreen', width=2)
+                ),
+                name='Minimum',
+                showlegend=False,
+                hoverinfo='skip'
+            ),
+            row=1, col=1
+        )
+        
+        # GD path
         fig.add_trace(
             go.Scatter(
                 x=[self.df_gd['a_ns'].iloc[0]],
@@ -119,6 +141,8 @@ class GradientDescent:
         )
 
         # ===== Right subplot: Loss curve =====
+        
+        # loss curve
         fig.add_trace(
             go.Scatter(
                 x=[],
@@ -129,28 +153,83 @@ class GradientDescent:
             ),
             row=1, col=2
         )
+        
+        # top boundary of green goal area (loss between 0 and 0.05)
+        fig.add_trace(
+            go.Scatter(
+                x=[self.df_gd['iteration'].min() - 1, self.df_gd['iteration'].max() + 1],
+                y=[0.05, 0.05],
+                fill=None,
+                mode='lines',
+                line=dict(width=0),
+                showlegend=False,
+                hoverinfo='skip'
+            ),
+            row=1, col=2
+        )
+        # bottom boundary of green goal area
+        fig.add_trace(
+            go.Scatter(
+                x=[self.df_gd['iteration'].min() - 1, self.df_gd['iteration'].max() + 1],
+                y=[0, 0],
+                fill='tonexty',
+                mode='lines',
+                line=dict(width=0),
+                fillcolor='rgba(144, 238, 144, 0.3)',  # light green with transparency
+                showlegend=False,
+                hoverinfo='skip'
+            ),
+            row=1, col=2
+        )
 
-        # ===== Frames: update both subplots together =====
+        # ===== Frames: update ALL traces =====
         frames = []
         for i in self.df_gd['iteration'].unique():
             frames.append(
                 go.Frame(
                     data=[
-                        # Left: 
-                        # Keep the line trace unchanged
-                        go.Scatter(x=x, y=f(x)),
-                        # Then update GD points
+                        # Trace 0: Keep the function line unchanged
+                        go.Scatter(x=x, y=self.f(x)),
+                        # Trace 1: Keep the green circle unchanged
+                        go.Scatter(
+                            x=[self.true_min],
+                            y=[self.f(self.true_min)],
+                            mode='markers',
+                            marker=dict(
+                                size=15,
+                                color='rgba(144, 238, 144, 0)',
+                                line=dict(color='lightgreen', width=2)
+                            )
+                        ),
+                        # Trace 2: Update GD points
                         go.Scatter(
                             x=self.df_gd.loc[self.df_gd['iteration'] <= i, 'a_ns'],
                             y=self.df_gd.loc[self.df_gd['iteration'] <= i, 'f_a_ns'],
                             marker=dict(color="red", size=7)
                         ),
-                        # Right: update loss curve
+                        # Trace 3: Update loss curve
                         go.Scatter(
                             x=self.df_gd.loc[self.df_gd['iteration'] <= i, 'iteration'],
                             y=self.df_gd.loc[self.df_gd['iteration'] <= i, 'losses'],
                             mode="markers+lines",
                             marker=dict(color="red", size=7)
+                        ),
+                        # Trace 4: Keep green band top line unchanged
+                        go.Scatter(
+                            x=[self.df_gd['iteration'].min() - 1, self.df_gd['iteration'].max() + 1],
+                            y=[0.05, 0.05],
+                            fill=None,
+                            mode='lines',
+                            line=dict(width=0)
+                        ),
+                        # Trace 5: Keep green band bottom line unchanged
+                        go.Scatter(
+                            x=[self.df_gd['iteration'].min() - 1, self.df_gd['iteration'].max() + 1],
+                            y=[0, 0],
+                            fill='tonexty',
+                            mode='lines',
+                            line=dict(width=0),
+                            fillcolor='rgba(144, 238, 144, 0.3)'
                         )
                     ],
                     name=str(i)
@@ -162,7 +241,6 @@ class GradientDescent:
         # ===== Layout with shared controls =====
         fig.update_layout(
             height=700,
-            #width=1000,
             title="Gradient Descent Animation",
             xaxis=dict(range=[self.X_MIN - 0.2, self.X_MAX + 0.2], title="x"),
             yaxis=dict(range=[min(self.f(x)) - 0.3, max(self.f(x)) + 0.3], title="f(x)"),
@@ -211,8 +289,6 @@ class GradientDescent:
                 'currentvalue': {'prefix': 'Iteration: '}
             }]
         )
-
-        #fig.show()
         
         return fig 
 

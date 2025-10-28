@@ -7,8 +7,8 @@ import numpy as np
 ###################### CONSTANTS AND UTILS ######################
 st.session_state.X_MIN = -2.0
 st.session_state.X_MAX = 2.0
-st.session_state.ETA_MIN = 0.0001
-st.session_state.ETA_MAX = 10000.0
+st.session_state.ETA_MIN = 0.001
+st.session_state.ETA_MAX = 100.0
 
 
 

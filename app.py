@@ -100,7 +100,7 @@ if run_simulation and st.session_state.formula:
         
         # Display the plot
         fig = GD.plot_iterations_and_loss()
-        #st.pyplot(fig)
+        st.plotly_chart(fig, use_container_width=True)
         
     except Exception as e:
         st.error(f"Error: {str(e)}")

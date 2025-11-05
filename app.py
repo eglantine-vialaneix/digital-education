@@ -5,13 +5,20 @@ import random
 import numpy as np
 
 ###################### CONSTANTS AND UTILS ######################
-st.session_state.X_MIN = -2.0
-st.session_state.X_MAX = 2.0
-st.session_state.ETA_MIN = 0.001
-st.session_state.ETA_MAX = 100.0
+if 'X_MIN' not in st.session_state:
+    st.session_state.X_MIN = -2.0
+    
+if 'X_MAX' not in st.session_state:
+    st.session_state.X_MAX = 2.0
+    
+if 'ETA_MIN' not in st.session_state:
+    st.session_state.ETA_MIN = 0.001
+    
+if 'ETA_MAX' not in st.session_state:
+    st.session_state.ETA_MAX = 100.0
 
-
-
+if 'simulation_counter' not in st.session_state:
+    st.session_state.simulation_counter = 0
 ###################### STREAMLIT APP ######################
 
 st.title("Find your way down the mountain!") #TODO: change the title and insert context and instructions
@@ -21,48 +28,60 @@ st.title("Find your way down the mountain!") #TODO: change the title and insert 
 
 ########### initial term ###########
 if 'init_value' not in st.session_state:
-    st.session_state.init_value = 1.5
+    st.session_state.init_value = -1.5
 
 # Create columns with a narrow first column for the label
-col0, col1, col2 = st.columns([0.35, 2.7, 1])
+colinit0, colinit1, colinit2, colinit3, colinit4, colinit5, colinit6 = st.columns([0.5, 1, 1, 1, 1, 1, 0.8])
 
-with col0:
-    st.markdown("#### a₀ =")
+with colinit0:
+    colinit0.markdown("#### a₀ =")
     
-with col1:
-    init_value = st.number_input(
-        "Initial value",  # Hidden label
-        min_value=st.session_state.X_MIN, 
-        max_value=st.session_state.X_MAX, 
-        value=st.session_state.init_value,
-        step=0.1,
-        label_visibility="collapsed"  # Hide the label
-    )
-    st.session_state.init_value = init_value
+with colinit1:
+    if st.button("-1.5", key="btn_neg15", width="stretch"):
+        st.session_state.init_value = -1.5
 
-with col2:
-    if st.button("Random", key="rand_a0"):
+with colinit2:
+    if st.button("-0.7", key="btn_neg07", width="stretch"):
+        st.session_state.init_value = -0.7
+        
+with colinit3:
+    if st.button("0.7", key="btn_pos07", width="stretch"):
+        st.session_state.init_value = 0.7
+
+with colinit4:
+    if st.button("1.5", key="btn_pos15", width="stretch"):
+        st.session_state.init_value = 1.5
+
+with colinit5:
+    if st.button("Random", key="rand_a0", width="stretch"):
         st.session_state.init_value = round(
             random.uniform(st.session_state.X_MIN, st.session_state.X_MAX), 1
         )
         st.rerun()
         
+with colinit6:
+    st.text_input(
+        "Value", 
+        value=str(st.session_state.init_value),
+        disabled=True,
+        label_visibility="collapsed"
+    )
 
 ######### learning rate ##########
 if 'eta_value' not in st.session_state:
     st.session_state.eta_value = 1.0
 
 # Create columns with a narrow first column for the label
-col3, col4, col5 = st.columns([0.35, 2.7, 1])
+coleta3, coleta4, coleta5 = st.columns([0.35, 2.7, 1])
 
-with col3:
+with coleta3:
     st.markdown("#### η =")
     
-with col4:
+with coleta4:
     # Create logarithmically spaced options
     log_min = np.log10(st.session_state.ETA_MIN)  
     log_max = np.log10(st.session_state.ETA_MAX)    
-    num_steps = round(np.abs(log_min) + np.abs(log_max) + 1)
+    num_steps = round(2 * (np.abs(log_min) + np.abs(log_max)) + 1)
     
     log_options = np.linspace(log_min, log_max, num_steps)
     options = [round(10 ** x, 4) for x in log_options]
@@ -79,7 +98,7 @@ with col4:
     
     st.session_state.eta_value = eta_value
 
-with col5:
+with coleta5:
     if st.button("Random", key="random_eta"):
         # Generate random value on logarithmic scale
         random_log = random.uniform(log_min, log_max)
@@ -97,7 +116,7 @@ run_simulation = st.button("Let's try this!", type="primary")
 # Run simulation
 if run_simulation:
     try:
-        GD = GradientDescent(st.session_state.X_MIN, st.session_state.X_MAX)
+        GD = GradientDescent(st.session_state.X_MIN, st.session_state.X_MAX, st.session_state.simulation_counter)
         GD.set_a_0(st.session_state.init_value)
         GD.set_eta(st.session_state.eta_value)
         df_gd = GD.gradient_descent()
@@ -105,6 +124,9 @@ if run_simulation:
         # Display the plot
         fig = GD.plot_iterations_and_loss()
         st.plotly_chart(fig, use_container_width=True)
+        st.session_state.simulation_counter += 1
+        print(st.session_state.simulation_counter)
+        
         
     except Exception as e:
         st.error(f"Error: {str(e)}")

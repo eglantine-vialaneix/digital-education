@@ -7,17 +7,36 @@ from plotly.subplots import make_subplots
 import streamlit as st
 
 
+# CATALOGUE:
 # convex functions we define and use for this exercice
-def f(x):
-    return x**2 + 0.5*x
 
-def grad_f(x):
+# Shifted squared
+def shifted_squared(x):
+    return x**2 + 0.5*x
+def grad_shifted_squared(x):
     return 2*x + 0.5
 
-# TODO: def other interesting convex functions (and their gradient)
+# Oscillating square
+def square_sin(x):
+    return x * x + 0.1 * np.sin(10 * x)
+def grad_square_sin(x):
+    return 2 * x + np.cos(10 * x)
+
+# Absolute value, non-differentiable at 0
+def absolute(x):
+    return np.abs(x)
+def grad_absolute(x):
+    return np.sign(x) # fyi: np.sign(0) = 0
+
+# Log barrier (convex on x > 0 only)
+def log_barrier(x):
+    return -np.log(x) if x > 0 else np.inf
+def grad_log_barrier(x):
+    return -1/x if x > 0 else 0
+
 
 class GradientDescent:
-    def __init__(self, X_MIN, X_MAX, n_pts = 400, max_iter = 15):
+    def __init__(self, X_MIN, X_MAX, sim_counter, n_pts = 400, max_iter = 15):
         # Defining the ranges of x values that the function will take
         # Those are the max and min of the plotted window
         self.X_MIN = X_MIN
@@ -29,16 +48,17 @@ class GradientDescent:
         self.a_0 = None
         self.eta = None
         self.df_gd = None
-        
-        # Defining the convex functions we will be working with
-        self.all_fs = [f] #TODO: add other functions
-        self.all_grad_fs = [grad_f] #TODO: add their corresponding gradients
-        self.f = self.all_fs[0]
-        self.grad_f = self.all_grad_fs[0]
-        self.true_min = None #storing the true min value of the function for computations
-        
+    
         # User data
-        self.simulation_counter = 0 # count how many times the user runs the simulation
+        self.simulation_counter = sim_counter# count how many times the user runs the simulation
+
+        # Defining the convex functions we will be working with
+        self.all_fs = [shifted_squared, square_sin, absolute, log_barrier] 
+        self.all_grad_fs = [grad_shifted_squared, grad_square_sin, grad_absolute, grad_log_barrier] 
+        self.f = self.all_fs[(sim_counter // 3) % len(self.all_fs)]
+        self.grad_f = self.all_grad_fs[(sim_counter // 3) % len(self.all_fs)]
+        self.true_min = None # storing the true min value of the function for computations
+        
 
 
     def set_eta(self, eta_value):
@@ -51,9 +71,7 @@ class GradientDescent:
         self.a_0 = a_0_value
         print(f"Using the initial point a₀: {self.a_0}")
 
-    def gradient_descent(self, 
-                         formula = "a_n - self.eta * self.grad_f(a_n)"):
-        
+    def gradient_descent(self):
         # Checking requirements before running the algorithm
         assert self.eta is not None, "Please use self.set_eta to define the learning rate before running the algorithm."
         assert self.a_0 is not None, "Please use self.set_a_0 to define the initial point before running the algorithm."
@@ -69,7 +87,7 @@ class GradientDescent:
         
         #perform the algorithm
         for i in range(1, self.max_iter):
-            a_n_1 =  eval(formula) #this is the formula extracted from the user guess
+            a_n_1 =  a_n - self.eta * self.grad_f(a_n) 
             a_ns[i] = a_n_1
             losses[i] = self.compute_loss(a_n_1)
             a_n = a_n_1
@@ -88,7 +106,7 @@ class GradientDescent:
     
     def set_true_min(self):
         self.true_min = self.find_min_f()
-        print(f"The actual minimum of f is at x = {self.true_min:.2f} with f(x) = {self.f(self.true_min):.2f}")
+        #print(f"The actual minimum of f is at x = {self.true_min:.2f} with f(x) = {self.f(self.true_min):.2f}")
     
     def compute_loss(self, x):
         if self.true_min is None:
@@ -105,7 +123,7 @@ class GradientDescent:
         # ===== Left subplot: f(x) + GD path =====
         
         # f(x)
-        x = np.linspace(self.X_MIN, self.X_MAX, 300)
+        x = np.linspace(self.X_MIN, self.X_MAX, self.n_pts)
         fig.add_trace(
             go.Scatter(
                 x=x,
@@ -117,23 +135,52 @@ class GradientDescent:
             row=1, col=1
         )
         
-        # Circle around true minimum on f 
+        # top boundary of green goal area (loss between 0 and 0.05)
         fig.add_trace(
             go.Scatter(
-                x=[self.true_min],
-                y=[self.f(self.true_min)],
-                mode='markers',
-                marker=dict(
-                    size=15,
-                    color='rgba(144, 238, 144, 0)',  # transparent fill
-                    line=dict(color='lightgreen', width=2)
-                ),
-                name='Minimum',
+                x=x,
+                y=[self.f(self.true_min) + 0.05] * self.n_pts ,
+                fill=None,
+                mode='lines',
+                line=dict(width=0),
                 showlegend=False,
                 hoverinfo='skip'
             ),
             row=1, col=1
         )
+        # bottom boundary of green goal area
+        fig.add_trace(
+            go.Scatter(
+                x=x,
+                y=[self.f(self.true_min)] * self.n_pts,
+                fill='tonexty',
+                mode='lines',
+                line=dict(width=0),
+                fillcolor='rgba(144, 238, 144, 0.3)',  # light green with transparency
+                showlegend=False,
+                hoverinfo='skip'
+            ),
+            row=1, col=1
+        )
+        
+        
+        # # Circle around true minimum on f 
+        # fig.add_trace(
+        #     go.Scatter(
+        #         x=[self.true_min],
+        #         y=[self.f(self.true_min)],
+        #         mode='markers',
+        #         marker=dict(
+        #             size=15,
+        #             color='rgba(144, 238, 144, 0)',  # transparent fill
+        #             line=dict(color='lightgreen', width=2)
+        #         ),
+        #         name='Minimum',
+        #         showlegend=False,
+        #         hoverinfo='skip'
+        #     ),
+        #     row=1, col=1
+        # )
         
         # GD path
         fig.add_trace(
@@ -198,15 +245,32 @@ class GradientDescent:
                         # Trace 0: Keep the function line unchanged
                         go.Scatter(x=x, y=self.f(x)),
                         # Trace 1: Keep the green circle unchanged
+                        # go.Scatter(
+                        #     x=[self.true_min],
+                        #     y=[self.f(self.true_min)],
+                        #     mode='markers',
+                        #     marker=dict(
+                        #         size=15,
+                        #         color='rgba(144, 238, 144, 0)',
+                        #         line=dict(color='lightgreen', width=2)
+                        #     )
+                        # ),
+                        # Trace 1.1: Keep green band top line unchanged
                         go.Scatter(
-                            x=[self.true_min],
-                            y=[self.f(self.true_min)],
-                            mode='markers',
-                            marker=dict(
-                                size=15,
-                                color='rgba(144, 238, 144, 0)',
-                                line=dict(color='lightgreen', width=2)
-                            )
+                            x=x,
+                            y=[self.f(self.true_min) + 0.05] * self.n_pts,
+                            fill=None,
+                            mode='lines',
+                            line=dict(width=0)
+                        ),
+                        # Trace 1.2: Keep green band bottom line unchanged
+                        go.Scatter(
+                            x=x,
+                            y=[self.f(self.true_min)] * self.n_pts,
+                            fill='tonexty',
+                            mode='lines',
+                            line=dict(width=0),
+                            fillcolor='rgba(144, 238, 144, 0.3)'
                         ),
                         # Trace 2: Update GD points
                         go.Scatter(
@@ -221,7 +285,7 @@ class GradientDescent:
                             mode="markers+lines",
                             marker=dict(color="red", size=7)
                         ),
-                        # Trace 4: Keep green band top line unchanged
+                        # Trace 4.1: Keep green band top line unchanged
                         go.Scatter(
                             x=[self.df_gd['iteration'].min() - 1, self.df_gd['iteration'].max() + 1],
                             y=[0.05, 0.05],
@@ -229,7 +293,7 @@ class GradientDescent:
                             mode='lines',
                             line=dict(width=0)
                         ),
-                        # Trace 5: Keep green band bottom line unchanged
+                        # Trace 4.2: Keep green band bottom line unchanged
                         go.Scatter(
                             x=[self.df_gd['iteration'].min() - 1, self.df_gd['iteration'].max() + 1],
                             y=[0, 0],

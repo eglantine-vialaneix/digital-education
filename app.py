@@ -28,6 +28,20 @@ st.set_page_config(page_title="Cauchy in Matterhorn",
 
 st.title("Find your way down the mountain!") #TODO: change the title and insert context and instructions
 
+st.markdown("You come up with this brilliant formula that you decide to call **Gradient Descent**:")
+
+colintro1, colintro2 = st.columns(2)
+
+with colintro1:
+    st.latex(r'''
+    \begin{cases} 
+    a_0 \in \R \\
+    a_{n+1} = a_n - \eta \nabla f(a_n)
+    \end{cases}
+    ''')
+
+with colintro2:
+    st.markdown("- $a_0$ is your current coordinates \n- $\eta$ is the size of your steps \n- Your goal is to find the minimum of f")
 
 ############# USER INPUTS #################
 
@@ -116,7 +130,23 @@ with coleta5:
 ############# SIMULATION #################
 
 # Simulation button
-run_simulation = st.button("Let's try this!", type="primary")
+
+colsimbutton, colusertext = st.columns([0.3, 1])
+
+with colsimbutton:
+    run_simulation = st.button("Let's try this!", type="primary")
+
+
+with colusertext:
+    if not run_simulation:
+        user_text = st.text_area(label= "What do you think will happen ?",
+                                width="stretch",
+                                placeholder="I think this configuration will (not) work because…")
+    if run_simulation:
+        user_text = st.text_area(label= "Did you reach the minimum? Why?",
+                                 width="stretch",
+                                 placeholder="I did (not) reach my oven on time! I think it was because…")
+
 
 # Run simulation
 if run_simulation:

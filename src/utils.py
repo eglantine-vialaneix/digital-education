@@ -7,12 +7,14 @@ from plotly.subplots import make_subplots
 import streamlit as st
 
 
-# 9. Asymmetric bowl
+# convex functions we define and use for this exercice
 def f(x):
     return x**2 + 0.5*x
 
 def grad_f(x):
     return 2*x + 0.5
+
+# TODO: def other interesting convex functions (and their gradient)
 
 class GradientDescent:
     def __init__(self, X_MIN, X_MAX, n_pts = 400, max_iter = 15):
@@ -28,10 +30,15 @@ class GradientDescent:
         self.eta = None
         self.df_gd = None
         
-        # Defining the convex function we will be working with
-        self.f = f
-        self.grad_f = grad_f
-        self.true_min = None
+        # Defining the convex functions we will be working with
+        self.all_fs = [f] #TODO: add other functions
+        self.all_grad_fs = [grad_f] #TODO: add their corresponding gradients
+        self.f = self.all_fs[0]
+        self.grad_f = self.all_grad_fs[0]
+        self.true_min = None #storing the true min value of the function for computations
+        
+        # User data
+        self.simulation_counter = 0 # count how many times the user runs the simulation
 
 
     def set_eta(self, eta_value):

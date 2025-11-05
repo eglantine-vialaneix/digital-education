@@ -3,8 +3,10 @@ A digital learning tool to teach Gradient Descent
 
 LEFT TODO:
 
-- Instruction questions like “compute in how many steps are you going to reach your house?”
-- Pop up that forces prediction before simulation and/or interpretation after
-- retrieve user data like number of trials
-- Change functions f after x trials
-- Show the formula on page
+- Pop up that forces prediction before simulation and/or **interpretation** after (TBD)
+- retrieve user data like number of trials (Eglantine)
+- Change functions f after x trials (Eglantine)
+
+- Try a preliminary exercice about the algorithm itself, before the simulation part (Thomaz)
+
+- Write instructions and questions like “the theoritical minimum number of steps is X. what is the best eta to find the minimum?” + Show the formula on page (TBD)

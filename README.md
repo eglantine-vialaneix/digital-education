@@ -13,4 +13,7 @@ LEFT TODO:
 
 - Try a preliminary exercice about the algorithm itself, before the simulation part (Thomaz)
 
-- Write instructions and questions like “the theoritical minimum number of steps is X. what is the best eta to find the minimum?” + Show the formula on page (Eglantine)
+- Embed the video instructions before the simulations and all (Eglantine)
+- ITA: https://youtu.be/LLaubZsj0i4
+- ENG: https://youtu.be/jC6q_nrbnh0
+- FR: done, to be uploaded on yt

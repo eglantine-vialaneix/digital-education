@@ -28,15 +28,18 @@ def absolute(x):
 def grad_absolute(x):
     return np.sign(x) # fyi: np.sign(0) = 0
 
-# Log barrier (convex on x > 0 only)
-def log_barrier(x):
-    return -np.log(x) if x > 0 else np.inf
-def grad_log_barrier(x):
-    return -1/x if x > 0 else 0
+# Double valley - polynomial function that has 2 minima
+def double_valley(x):
+    return ((x + 4) ** 4 - 15 * (x + 4) ** 3 + 80 * (x + 4) ** 2 - 180 * (x + 4) + 144) / 10
 
+def grad_double_valley(x):
+    return (-4 - 8 * x + 3 * x ** 2 + 4 * x ** 3) / 10
+
+# Should we change the function every 5 simulations? Every 3 simulations?
+change_every = 1
 
 class GradientDescent:
-    def __init__(self, X_MIN, X_MAX, sim_counter, n_pts = 400, max_iter = 15):
+    def __init__(self, X_MIN, X_MAX, sim_counter, n_pts = 500, max_iter = 15):
         # Defining the ranges of x values that the function will take
         # Those are the max and min of the plotted window
         self.X_MIN = X_MIN
@@ -53,10 +56,12 @@ class GradientDescent:
         self.simulation_counter = sim_counter# count how many times the user runs the simulation
 
         # Defining the convex functions we will be working with
-        self.all_fs = [shifted_squared, square_sin, absolute, log_barrier] 
-        self.all_grad_fs = [grad_shifted_squared, grad_square_sin, grad_absolute, grad_log_barrier] 
-        self.f = self.all_fs[(sim_counter // 3) % len(self.all_fs)]
-        self.grad_f = self.all_grad_fs[(sim_counter // 3) % len(self.all_fs)]
+        self.all_fs = [shifted_squared, square_sin, absolute, double_valley] 
+        self.all_grad_fs = [grad_shifted_squared, grad_square_sin, grad_absolute, grad_double_valley] 
+        # We loop over all functions to get a different one every X run of simulation (X set by change_every)
+        self.f = self.all_fs[(sim_counter // change_every) % len(self.all_fs)]
+        self.grad_f = self.all_grad_fs[(sim_counter // change_every) % len(self.all_fs)]
+        
         self.true_min = None # storing the true min value of the function for computations
         
 
@@ -152,7 +157,7 @@ class GradientDescent:
         fig.add_trace(
             go.Scatter(
                 x=x,
-                y=[self.f(self.true_min)] * self.n_pts,
+                y=[self.f(self.true_min) - 0.05] * self.n_pts,
                 fill='tonexty',
                 mode='lines',
                 line=dict(width=0),
@@ -163,24 +168,23 @@ class GradientDescent:
             row=1, col=1
         )
         
-        
-        # # Circle around true minimum on f 
-        # fig.add_trace(
-        #     go.Scatter(
-        #         x=[self.true_min],
-        #         y=[self.f(self.true_min)],
-        #         mode='markers',
-        #         marker=dict(
-        #             size=15,
-        #             color='rgba(144, 238, 144, 0)',  # transparent fill
-        #             line=dict(color='lightgreen', width=2)
-        #         ),
-        #         name='Minimum',
-        #         showlegend=False,
-        #         hoverinfo='skip'
-        #     ),
-        #     row=1, col=1
-        # )
+        # Circle around true minimum on f 
+        fig.add_trace(
+            go.Scatter(
+                x=[self.true_min],
+                y=[self.f(self.true_min)],
+                mode='markers',
+                marker=dict(
+                    size=7,
+                    color='rgba(144, 238, 144, 0)',  # transparent fill
+                    line=dict(color='lightgreen', width=2)
+                ),
+                name='Minimum',
+                showlegend=False,
+                hoverinfo='skip'
+            ),
+            row=1, col=1
+        )
         
         # GD path
         fig.add_trace(
@@ -245,16 +249,16 @@ class GradientDescent:
                         # Trace 0: Keep the function line unchanged
                         go.Scatter(x=x, y=self.f(x)),
                         # Trace 1: Keep the green circle unchanged
-                        # go.Scatter(
-                        #     x=[self.true_min],
-                        #     y=[self.f(self.true_min)],
-                        #     mode='markers',
-                        #     marker=dict(
-                        #         size=15,
-                        #         color='rgba(144, 238, 144, 0)',
-                        #         line=dict(color='lightgreen', width=2)
-                        #     )
-                        # ),
+                        go.Scatter(
+                            x=[self.true_min],
+                            y=[self.f(self.true_min)],
+                            mode='markers',
+                            marker=dict(
+                                size=7,
+                                color='rgba(144, 238, 144, 0)',
+                                line=dict(color='lightgreen', width=2)
+                            )
+                        ),
                         # Trace 1.1: Keep green band top line unchanged
                         go.Scatter(
                             x=x,
@@ -266,7 +270,7 @@ class GradientDescent:
                         # Trace 1.2: Keep green band bottom line unchanged
                         go.Scatter(
                             x=x,
-                            y=[self.f(self.true_min)] * self.n_pts,
+                            y=[self.f(self.true_min) - 0.05] * self.n_pts,
                             fill='tonexty',
                             mode='lines',
                             line=dict(width=0),

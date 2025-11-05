@@ -6,10 +6,10 @@ import numpy as np
 
 ###################### CONSTANTS AND UTILS ######################
 if 'X_MIN' not in st.session_state:
-    st.session_state.X_MIN = -2.0
+    st.session_state.X_MIN = -2.5
     
 if 'X_MAX' not in st.session_state:
-    st.session_state.X_MAX = 2.0
+    st.session_state.X_MAX = 2.5
     
 if 'ETA_MIN' not in st.session_state:
     st.session_state.ETA_MIN = 0.001
@@ -20,6 +20,11 @@ if 'ETA_MAX' not in st.session_state:
 if 'simulation_counter' not in st.session_state:
     st.session_state.simulation_counter = 0
 ###################### STREAMLIT APP ######################
+
+st.set_page_config(page_title="Cauchy in Matterhorn",
+                   page_icon="src/assets/cauchy_icon.png",
+                   layout = "wide",
+                   )
 
 st.title("Find your way down the mountain!") #TODO: change the title and insert context and instructions
 

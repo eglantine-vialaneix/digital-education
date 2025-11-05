@@ -1,5 +1,9 @@
 # digital-education
-A digital learning tool to teach Gradient Descent
+A digital learning tool to teach Gradient Descent. 
+
+See web deployment at [Cauchy in Matterhorn](https://cauchy-in-matterhorn.streamlit.app/)
+
+
 
 LEFT TODO:
 

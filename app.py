@@ -22,7 +22,7 @@ if 'simulation_counter' not in st.session_state:
 ###################### STREAMLIT APP ######################
 
 st.set_page_config(page_title="Cauchy in Matterhorn",
-                   page_icon="src/assets/cauchy_icon.png",
+                   page_icon="src/assets/gd_icon.png",
                    layout = "wide",
                    )
 

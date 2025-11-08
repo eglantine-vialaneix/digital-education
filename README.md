@@ -7,13 +7,21 @@ See web deployment at [Cauchy in Matterhorn](https://cauchy-in-matterhorn.stream
 
 LEFT TODO:
 
-- Pop up that forces prediction before simulation and/or **interpretation** after (Eglantine)
-
-- retrieve user data like number of trials (Eglantine)
-
-- Try a preliminary exercice about the algorithm itself, before the simulation part (Thomaz)
+- retrieve user data (from screening questionnaire, pretest, posttest and meta info like number of trials and time on task)(Eglantine)
+  - create google docs file OR st form
+  - test data retrieval into google sheets
 
 - Embed the video instructions before the simulations and all (Eglantine)
 - ITA: https://youtu.be/LLaubZsj0i4
 - ENG: https://youtu.be/jC6q_nrbnh0
-- FR: done, to be uploaded on yt
+- FR: https://youtu.be/Jw-PE9NrOKI
+  - in home: conditional context video (PSI vs IPS)
+  - in instructions: conditional instructions video (IPS vs PSI AND language)
+
+- refine PS activity
+  - repair plotting with number of iterations
+  - force minimum number of characters for interpretation 
+
+- ~~Pop up that forces prediction before simulation and/or **interpretation** after (Eglantine)~~
+
+- ~~Try a preliminary exercice about the algorithm itself, before the simulation part (Thomaz)~~

@@ -1,6 +1,6 @@
 # app.py
 import streamlit as st
-from src.utils import GradientDescent
+from src.GradientDescent import GradientDescent
 import random
 import numpy as np
 
@@ -26,7 +26,7 @@ st.set_page_config(page_title="Cauchy in Matterhorn",
                    layout = "wide",
                    )
 
-st.title("Find your way down the mountain!") #TODO: change the title and insert context and instructions
+st.title("Find your way down the mountain!") 
 
 st.markdown("You come up with this brilliant formula that you decide to call **Gradient Descent**:")
 

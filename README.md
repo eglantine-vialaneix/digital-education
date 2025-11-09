@@ -15,8 +15,12 @@ LEFT TODO:
 - ITA: https://youtu.be/LLaubZsj0i4
 - ENG: https://youtu.be/jC6q_nrbnh0
 - FR: https://youtu.be/Jw-PE9NrOKI
-  - in home: conditional context video (PSI vs IPS)
+  - in home: conditional context video (PSI vs IPS) + french context video
   - in instructions: conditional instructions video (IPS vs PSI AND language)
+  - 
+
+- fix the new navigation sustem between pages
+  - conditional navigation based on PSIvsIPS
 
 - refine PS activity
   - repair plotting with number of iterations

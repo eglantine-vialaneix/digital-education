@@ -17,7 +17,7 @@ LEFT TODO:
 - FR: https://youtu.be/Jw-PE9NrOKI
   - in home: conditional context video (PSI vs IPS) + language
   - ~~in instructions: conditional instructions video (IPS vs PSI AND language)~~
-  - 
+  - put all the correct video links for PS-I instruction video
 
 - ~~fix the new navigation sustem between pages~~
   - ~~conditional navigation based on PSIvsIPS~~

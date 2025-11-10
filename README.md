@@ -11,20 +11,22 @@ LEFT TODO:
   - create google docs file OR st form
   - test data retrieval into google sheets
 
-- Embed the video instructions before the simulations and all (Eglantine)
+- ~~Embed the video instructions before the simulations and all (Eglantine):n~~
 - ITA: https://youtu.be/LLaubZsj0i4
 - ENG: https://youtu.be/jC6q_nrbnh0
 - FR: https://youtu.be/Jw-PE9NrOKI
-  - in home: conditional context video (PSI vs IPS) + french context video
-  - in instructions: conditional instructions video (IPS vs PSI AND language)
+  - in home: conditional context video (PSI vs IPS) + language
+  - ~~in instructions: conditional instructions video (IPS vs PSI AND language)~~
   - 
 
-- fix the new navigation sustem between pages
-  - conditional navigation based on PSIvsIPS
+- ~~fix the new navigation sustem between pages~~
+  - ~~conditional navigation based on PSIvsIPS~~
 
 - refine PS activity
-  - repair plotting with number of iterations
+  - ~~repair plotting with number of iterations~~
   - force minimum number of characters for interpretation 
+  - ideally make the labels disappear witht the dots when going back in iterations
+  - merge with Thomaz version
 
 - ~~Pop up that forces prediction before simulation and/or **interpretation** after (Eglantine)~~
 

@@ -377,66 +377,43 @@ class GradientDescent:
 
         # ===== Left subplot: f(x) + GD path =====
         
-        # f(x)
         x = np.linspace(self.X_MIN, self.X_MAX, self.n_pts)
         fig.add_trace(
-            go.Scatter(
-                x=x,
-                y=self.f(x),
-                mode="lines",
-                name="f(x)",
-                line=dict(color="lightgray"),
-            ),
+            go.Scatter(x=x, y=self.f(x), mode="lines", name="f(x)", line=dict(color="lightgray")),
             row=1, col=1
         )
         
-        # top boundary of green goal area (loss between 0 and 0.05)
-        fig.add_trace(
-            go.Scatter(
-                x=x,
-                y=[self.f(self.true_min) + 0.05] * self.n_pts ,
-                fill=None,
-                mode='lines',
-                line=dict(width=0),
-                showlegend=False,
-                hoverinfo='skip'
-            ),
-            row=1, col=1
-        )
-        # bottom boundary of green goal area
-        fig.add_trace(
-            go.Scatter(
-                x=x,
-                y=[self.f(self.true_min) - 0.05] * self.n_pts,
-                fill='tonexty',
-                mode='lines',
-                line=dict(width=0),
-                fillcolor='rgba(144, 238, 144, 0.3)',  # light green with transparency
-                showlegend=False,
-                hoverinfo='skip'
-            ),
-            row=1, col=1
-        )
-        
-        # Circle around true minimum on f 
-        fig.add_trace(
-            go.Scatter(
-                x=[self.true_min],
-                y=[self.f(self.true_min)],
-                mode='markers',
-                marker=dict(
-                    size=7,
-                    color='rgba(144, 238, 144, 0.5)',  # light green with transparency
-                    line=dict(color='lightgreen', width=2)
+        # Green goal area around f(true_min)
+        for fill_y, fill_opt in [
+            ([self.f(self.true_min) + 0.05] * self.n_pts, None),
+            ([self.f(self.true_min) - 0.05] * self.n_pts, 'tonexty')
+        ]:
+            fig.add_trace(
+                go.Scatter(
+                    x=x, y=fill_y,
+                    fill=fill_opt,
+                    mode='lines',
+                    line=dict(width=0),
+                    fillcolor='rgba(144, 238, 144, 0.3)' if fill_opt else None,
+                    showlegend=False,
+                    hoverinfo='skip'
                 ),
-                name='Minimum',
-                showlegend=False,
-                hoverinfo='skip'
+                row=1, col=1
+            )
+        
+        # Circle around true minimum
+        fig.add_trace(
+            go.Scatter(
+                x=[self.true_min], y=[self.f(self.true_min)],
+                mode='markers',
+                marker=dict(size=7, color='rgba(144, 238, 144, 0.5)',
+                            line=dict(color='lightgreen', width=2)),
+                showlegend=False, hoverinfo='skip'
             ),
             row=1, col=1
         )
         
-        # GD path
+        # GD initial point
         fig.add_trace(
             go.Scatter(
                 x=[self.df_gd['a_ns'].iloc[0]],
@@ -448,150 +425,78 @@ class GradientDescent:
             row=1, col=1
         )
 
-        # iteration labels of GD path (with spiral offset) 
-        angles = np.linspace(0, 2*np.pi, 15, endpoint=False) # Generate angles evenly distributed to avoid overlap
-        radius_factor = 50  # Pixel offset distance from point
-        
-        # Initial annotations (just for iteration 0)
-        fig.add_annotation(
-            x=self.df_gd['a_ns'].iloc[0],
-            y=self.df_gd['f_a_ns'].iloc[0],
-            text=f"$a_{str(self.df_gd['iteration'].iloc[0])}$",
-            showarrow=False,
-            xshift=radius_factor * np.cos(angles[0]),
-            yshift=radius_factor * np.sin(angles[0]),
-            font=dict(size=9, color="darkred"),
-            row=1, col=1
-        )
-
         # ===== Right subplot: Loss curve =====
-        
-        # loss curve
         fig.add_trace(
             go.Scatter(
-                x=[],
-                y=[],
+                x=[], y=[],
                 mode="markers+lines",
                 marker=dict(color="red", size=7),
                 name="Loss"
             ),
             row=1, col=2
         )
-        
-        # top boundary of green goal area (loss between 0 and 0.05)
-        fig.add_trace(
-            go.Scatter(
-                x=[self.df_gd['iteration'].min() - 1, self.df_gd['iteration'].max() + 1],
-                y=[0.05, 0.05],
-                fill=None,
-                mode='lines',
-                line=dict(width=0),
-                showlegend=False,
-                hoverinfo='skip'
-            ),
-            row=1, col=2
-        )
-        # bottom boundary of green goal area
-        fig.add_trace(
-            go.Scatter(
-                x=[self.df_gd['iteration'].min() - 1, self.df_gd['iteration'].max() + 1],
-                y=[0, 0],
-                fill='tonexty',
-                mode='lines',
-                line=dict(width=0),
-                fillcolor='rgba(144, 238, 144, 0.3)',  # light green with transparency
-                showlegend=False,
-                hoverinfo='skip'
-            ),
-            row=1, col=2
-        )
 
-        # ===== Frames: update ALL traces =====
+        # Green goal band for loss
+        for fill_y, fill_opt in [([0.05, 0.05], None), ([0, 0], 'tonexty')]:
+            fig.add_trace(
+                go.Scatter(
+                    x=[self.df_gd['iteration'].min() - 1, self.df_gd['iteration'].max() + 1],
+                    y=fill_y,
+                    fill=fill_opt,
+                    mode='lines',
+                    line=dict(width=0),
+                    fillcolor='rgba(144, 238, 144, 0.3)' if fill_opt else None,
+                    showlegend=False,
+                    hoverinfo='skip'
+                ),
+                row=1, col=2
+            )
+
+        # ===== Frames =====
         frames = []
+        xshift, yshift = 20, 10  # fixed offset for all labels
+
         for i in self.df_gd['iteration'].unique():
-            # Get data up to current iteration
             data_up_to_i = self.df_gd[self.df_gd['iteration'] <= i]
-            
-            # Create annotations for all points up to current iteration
-            annotations = []
-            for idx, row in data_up_to_i.iterrows():
-                iter_num = row['iteration']
-                annotations.append(
-                    dict(
-                        x=row['a_ns'],
-                        y=row['f_a_ns'],
-                        text=str(iter_num),
-                        showarrow=False,
-                        xshift=radius_factor * np.cos(angles[iter_num]),
-                        yshift=radius_factor * np.sin(angles[iter_num]),
-                        font=dict(size=9, color="darkred"),
-                        xref='x', yref='y'  # Reference to first subplot
-                    )
+
+            # Only show labels for visible points
+            annotations = [
+                dict(
+                    x=row['a_ns'],
+                    y=row['f_a_ns'],
+                    text=f"a{int(row['iteration'])}",
+                    showarrow=False,
+                    xshift=xshift,
+                    yshift=yshift,
+                    font=dict(size=12, color="darkred"),
+                    xref='x', yref='y'
                 )
-            
+                for _, row in data_up_to_i.iterrows()
+            ]
+
             frames.append(
                 go.Frame(
                     data=[
-                        # Trace 0: Keep the function line unchanged
-                        go.Scatter(x=x, y=self.f(x)),
-                        # Trace 1: Keep green band top line unchanged
-                        go.Scatter(
-                            x=x,
-                            y=[self.f(self.true_min) + 0.05] * self.n_pts,
-                            fill=None,
-                            mode='lines',
-                            line=dict(width=0)
-                        ),
-                        # Trace 2: Keep green band bottom line unchanged
-                        go.Scatter(
-                            x=x,
-                            y=[self.f(self.true_min) - 0.05] * self.n_pts,
-                            fill='tonexty',
-                            mode='lines',
-                            line=dict(width=0),
-                            fillcolor='rgba(144, 238, 144, 0.3)'
-                        ),
-                        # Trace 3: Keep the green circle unchanged
-                        go.Scatter(
-                            x=[self.true_min],
-                            y=[self.f(self.true_min)],
-                            mode='markers',
-                            marker=dict(
-                                size=7,
-                                color='rgba(144, 238, 144, 0)',
-                                line=dict(color='lightgreen', width=2)
-                            )
-                        ),
-                        # Trace 4: Update GD points
+                        # Left plot traces
+                        go.Scatter(x=x, y=self.f(x)),  # f(x)
+                        go.Scatter(x=x, y=[self.f(self.true_min) + 0.05]*self.n_pts),
+                        go.Scatter(x=x, y=[self.f(self.true_min) - 0.05]*self.n_pts),
+                        go.Scatter(x=[self.true_min], y=[self.f(self.true_min)]),
                         go.Scatter(
                             x=data_up_to_i['a_ns'],
                             y=data_up_to_i['f_a_ns'],
+                            mode="markers",
                             marker=dict(color="red", size=7)
                         ),
-                        # Trace 5: Update loss curve
+                        # Right plot traces
                         go.Scatter(
                             x=data_up_to_i['iteration'],
                             y=data_up_to_i['losses'],
                             mode="markers+lines",
                             marker=dict(color="red", size=7)
                         ),
-                        # Trace 6: Keep green band top line unchanged (right plot)
-                        go.Scatter(
-                            x=[self.df_gd['iteration'].min() - 1, self.df_gd['iteration'].max() + 1],
-                            y=[0.05, 0.05],
-                            fill=None,
-                            mode='lines',
-                            line=dict(width=0)
-                        ),
-                        # Trace 7: Keep green band bottom line unchanged (right plot)
-                        go.Scatter(
-                            x=[self.df_gd['iteration'].min() - 1, self.df_gd['iteration'].max() + 1],
-                            y=[0, 0],
-                            fill='tonexty',
-                            mode='lines',
-                            line=dict(width=0),
-                            fillcolor='rgba(144, 238, 144, 0.3)'
-                        )
+                        go.Scatter(x=[self.df_gd['iteration'].min() - 1, self.df_gd['iteration'].max() + 1], y=[0.05, 0.05]),
+                        go.Scatter(x=[self.df_gd['iteration'].min() - 1, self.df_gd['iteration'].max() + 1], y=[0, 0])
                     ],
                     layout=go.Layout(annotations=annotations),
                     name=str(i)
@@ -600,7 +505,7 @@ class GradientDescent:
 
         fig.frames = frames
 
-        # ===== Layout with shared controls =====
+        # ===== Layout =====
         fig.update_layout(
             height=700,
             xaxis=dict(range=[self.X_MIN - 0.2, self.X_MAX + 0.2], title="x"),
@@ -612,36 +517,18 @@ class GradientDescent:
                 'type': 'buttons',
                 'showactive': False,
                 'buttons': [
-                    {
-                        'label': 'Play',
-                        'method': 'animate',
-                        'args': [None, {
-                            'frame': {'duration': 600, 'redraw': True},
-                            'fromcurrent': True,
-                            'transition': {'duration': 200}
-                        }]
-                    },
-                    {
-                        'label': 'Pause',
-                        'method': 'animate',
-                        'args': [[None], {
-                            'frame': {'duration': 0, 'redraw': False},
-                            'mode': 'immediate',
-                            'transition': {'duration': 0}
-                        }]
-                    }
+                    {'label': 'Play', 'method': 'animate',
+                    'args': [None, {'frame': {'duration': 600, 'redraw': True},
+                                    'fromcurrent': True, 'transition': {'duration': 200}}]},
+                    {'label': 'Pause', 'method': 'animate',
+                    'args': [[None], {'frame': {'duration': 0, 'redraw': False},
+                                    'mode': 'immediate', 'transition': {'duration': 0}}]}
                 ]
             }],
             sliders=[{
                 'steps': [
-                    {
-                        'args': [[str(i)], {
-                            'frame': {'duration': 0, 'redraw': True},
-                            'mode': 'immediate'
-                        }],
-                        'label': str(i),
-                        'method': 'animate'
-                    }
+                    {'args': [[str(i)], {'frame': {'duration': 0, 'redraw': True}, 'mode': 'immediate'}],
+                    'label': str(i), 'method': 'animate'}
                     for i in self.df_gd['iteration'].unique()
                 ],
                 'transition': {'duration': 200},
@@ -650,8 +537,9 @@ class GradientDescent:
                 'currentvalue': {'prefix': 'Iteration: '}
             }]
         )
-        
+
         return fig
+
 
 
     def plot_loss(self):

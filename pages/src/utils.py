@@ -1,0 +1,77 @@
+import streamlit as st
+import time
+
+# We store all valid keys and their corresponding group
+# True = PS-I (treatment), False = I-PS (control)
+key_to_condition = {"3199":True,
+                    "7537":False,
+                    "2223":True,
+                    "2267":False,
+                    "6040":True,
+                    "7799":False,
+                    "8107":True,
+                    "7784":False,
+                    "4539":True,
+                    "6528":False,
+                    "4936":True,
+                    "4750":False,
+                    "6579":True,
+                    "7829":False,
+                    "6445":True,
+                    "8953":False,
+                    "6285":True,
+                    "8287":False,
+                    "5252":True,
+                    "1104":False,
+                    "xpsi":True,  # These last 2 keys 
+                    "xips":False} # are for developers only
+
+def assign_condition(key):
+    if key not in key_to_condition:
+        st.error(f"The key you entered is not a valid key. Please enter a valid key, or refer to the instructors.")
+        return None
+    return key_to_condition[key]
+
+# We match the user prefered language adn their PSI condition to the right intruction video
+# True = PS-I (treatment), False = I-PS (control)
+language_to_video_URL = {("EN", False): "https://youtu.be/jC6q_nrbnh0",
+                         ("FR", False): "https://youtu.be/Jw-PE9NrOKI",
+                         ("IT", False): "https://youtu.be/LLaubZsj0i4",
+                         ("EN", True): "",
+                         ("FR", True): "",
+                         ("IT", True): ""}
+
+def instructions_URL(PSI, language="EN"):
+    if (language, PSI) not in language_to_video_URL:
+        st.error(f"The given arguments PSI={PSI} and language={language} are not valid. Please enter the PSI condition of the user (True for PSI, False for IPS), and their prefered language among 'EN', 'IT', and 'FR'.")
+        return None
+    return language_to_video_URL[(language, PSI)]
+
+
+def embed_video(video_url, next_page, waiting_time = 3):
+    # Initialize session state
+    if 'video_start_time' not in st.session_state:
+        st.session_state.video_start_time = time.time()
+    
+    if 'video_next_clicked' not in st.session_state:
+        st.session_state.video_next_clicked = False
+    
+    # Display the video
+    st.video(video_url)
+    
+    # Calculate elapsed time
+    elapsed_time = time.time() - st.session_state.video_start_time
+    
+    # Check if 60 seconds have passed
+    if elapsed_time >= waiting_time:
+        # Green enabled button
+        if st.button("Next", type="primary", use_container_width=False):
+            st.session_state.video_next_clicked = True
+            st.switch_page(next_page)
+    else:
+        # Disabled gray button with countdown
+        remaining = int(waiting_time - elapsed_time)#int(60 - elapsed_time)
+        st.button(f"Next (wait {remaining}s)", disabled=True, use_container_width=False)
+        # Auto-refresh every second to update the countdown
+        time.sleep(1)
+        st.rerun()

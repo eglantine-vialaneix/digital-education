@@ -1,6 +1,6 @@
 # app.py
 import streamlit as st
-from src.GradientDescent import GradientDescent
+from pages.src.GradientDescent import GradientDescent
 import random
 import numpy as np
 

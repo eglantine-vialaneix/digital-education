@@ -1,7 +1,7 @@
 # instructions.py
 
 import streamlit as st
-from src.utils import instructions_URL, assign_condition
+from pages.src.utils import instructions_URL, assign_condition, embed_video
 
 # This page contains the instruction video 
 # It automatically adapts on the condition of the user, givne by their key
@@ -32,14 +32,22 @@ coleng, colfr, colit = st.columns(3)
 with coleng:
     if st.button("English", width="stretch"):
         st.session_state.prefered_language = "EN"  
+        st.rerun()
 
 with colfr:
     if st.button("Français", width="stretch"):
         st.session_state.prefered_language = "FR"  
+        st.rerun()
 
 with colit:
     if st.button("Italiano", width="stretch"):
-        st.session_state.prefered_language = "IT"  
+        st.session_state.prefered_language = "IT" 
+        st.rerun() 
 
-if "PSI" in st.session_state:
-    st.video(instructions_URL(st.session_state.PSI, st.session_state.prefered_language))
+if "PSI" in st.session_state and "prefered_language" in st.session_state:
+    if st.session_state.PSI:
+        next_page="pages/posttest.py"
+    else:
+        next_page="pages/app.py"
+    embed_video(instructions_URL(st.session_state.PSI, st.session_state.prefered_language), next_page)
+    

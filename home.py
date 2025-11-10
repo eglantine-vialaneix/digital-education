@@ -1,6 +1,6 @@
 #home.py
 import streamlit as st
-from src.utils import assign_condition, embed_video
+from pages.src.utils import assign_condition, embed_video
 
 
 # This page is intended to contain the context video
@@ -117,24 +117,20 @@ if "PSI" in st.session_state and st.session_state.PSI is not None:
         st.markdown("## Let's start! With a little bit of context… 👯")
         if "PSI" not in st.session_state:
             st.error(f"No PSI condition has been assigned yet.")
-        if st.session_state.PSI:
-            embed_video("suYJGx3ailE", 'app.py')
-            st.write("some test text right after video")
-            if not st.session_state.video_next_clicked:
-                st.write("some test text after supposed clicked")
-                #st.switch_page('app.py')
+        elif st.session_state.PSI:
+            # display context video for PSI then move on to the PS activity
+            embed_video("https://youtu.be/suYJGx3ailE", 'pages/app.py')
         else:
-            embed_video("fd5T80Pc4FY", 'instructions.py')
-            if st.session_state.video_next_clicked:
-                st.switch_page('instructions.py')
+            # display context video for IPS then move on to the instructions
+            embed_video("https://youtu.be/fd5T80Pc4FY", 'pages/instructions.py')
+
             
 
 pages=[
     st.Page("home.py", title="Login and tell us about yourself"),
-    st.Page("instructions.py", title="Learn about Gradient Descent"),
-    st.Page("app.py", title="Problem-Solving"),
-    st.Page("posttest.py", title="How much did you learn today?"),
+    st.Page("pages/instructions.py", title="Learn about Gradient Descent"),
+    st.Page("pages/app.py", title="Problem-Solving"),
+    st.Page("pages/posttest.py", title="How much did you learn today?"),
 ]
 
-pg = st.navigation(pages, position="top")
-#pg.run()
+#pg = st.navigation(pages, position="top")

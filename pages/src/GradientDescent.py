@@ -36,6 +36,11 @@ def cube(x):
 def grad_cube(x):
     return 3 * x ** 2
 
+def deep_cubic(x):
+    return x ** 3 - 4 * x
+def grad_deep_cubic(x):
+    return 3* x ** 2 - 4 
+
 # Should we change the function every 5 simulations? Every 3 simulations?
 change_every = 1
 
@@ -57,8 +62,8 @@ class GradientDescent:
         self.simulation_counter = sim_counter# count how many times the user runs the simulation
 
         # Defining the convex functions we will be working with
-        self.all_fs = [shifted_squared, square_sin, absolute, double_valley, cube] 
-        self.all_grad_fs = [grad_shifted_squared, grad_square_sin, grad_absolute, grad_double_valley, grad_cube] 
+        self.all_fs = [shifted_squared, square_sin, absolute, double_valley, cube, deep_cubic] 
+        self.all_grad_fs = [grad_shifted_squared, grad_square_sin, grad_absolute, grad_double_valley, grad_cube, grad_deep_cubic] 
         # We loop over all functions to get a different one every X run of simulation (X set by change_every)
         self.f = self.all_fs[(sim_counter // change_every) % len(self.all_fs)]
         self.grad_f = self.all_grad_fs[(sim_counter // change_every) % len(self.all_fs)]

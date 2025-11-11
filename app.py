@@ -127,10 +127,10 @@ if "PSI" in st.session_state and st.session_state.PSI is not None:
             
 
 pages=[
-    st.Page("home.py", title="Login and tell us about yourself"),
+    st.Page("app.py", title="Login and tell us about yourself"),
     st.Page("pages/instructions.py", title="Learn about Gradient Descent"),
-    st.Page("pages/app.py", title="Problem-Solving"),
+    st.Page("pages/psactivity.py", title="Problem-Solving"),
     st.Page("pages/posttest.py", title="How much did you learn today?"),
 ]
 
-#pg = st.navigation(pages, position="top")
+#st.navigation(pages, position="top") -> something is werid: if i display the navigation then i cannot use switch_pages anymore ??

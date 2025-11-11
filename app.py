@@ -119,7 +119,7 @@ if "PSI" in st.session_state and st.session_state.PSI is not None:
             st.error(f"No PSI condition has been assigned yet.")
         elif st.session_state.PSI:
             # display context video for PSI then move on to the PS activity
-            embed_video("https://youtu.be/suYJGx3ailE", 'pages/app.py')
+            embed_video("https://youtu.be/suYJGx3ailE", 'pages/psactivity.py')
         else:
             # display context video for IPS then move on to the instructions
             embed_video("https://youtu.be/fd5T80Pc4FY", 'pages/instructions.py')

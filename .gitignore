@@ -209,3 +209,6 @@ __marimo__/
 
 # Drafts
 draft.ipynb
+
+# DS_Store
+.DS_Store

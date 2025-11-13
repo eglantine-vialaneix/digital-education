@@ -7,9 +7,6 @@ See web deployment at [Cauchy in Matterhorn](https://cauchy-in-matterhorn.stream
 
 LEFT TODO:
 
-- **FIX THOMAZ-BRANCH MERGE**
-  - **add hard exo from digital-education/app.py into pages/psactivity.py**
-  - **delete digital-education nested folder**
 
 - retrieve user data (from screening questionnaire, pretest, posttest and meta info like number of trials and time on task)(Eglantine)
   - create google docs file OR st form
@@ -28,6 +25,7 @@ LEFT TODO:
   - ~~conditional navigation based on PSIvsIPS~~
 
 - refine PS activity
+  - remove all (plotting and other) functions from psactivity.py file -> into utils
   - force minimum number of characters for interpretation 
   - ideally make the labels disappear with the dots when going back in iterations
   - make labels clearer (in bold and bigger font)
@@ -40,3 +38,7 @@ LEFT TODO:
 - ~~Pop up that forces prediction before simulation and/or **interpretation** after (Eglantine)~~
 
 - ~~Try a preliminary exercice about the algorithm itself, before the simulation part (Thomaz)~~
+
+- ~~FIX THOMAZ-BRANCH MERGE~~
+  - ~~add hard exo from digital-education/app.py into pages/psactivity.py~~
+  -~~delete digital-education nested folde~~

@@ -5,7 +5,7 @@ from plotly.subplots import make_subplots
 
 
 # CATALOGUE:
-# convex functions we define and use for this exercice
+# convex functions we define and use for the PS activity
 
 # Shifted squared
 def shifted_squared(x):
@@ -31,18 +31,24 @@ def double_valley(x):
 def grad_double_valley(x):
     return (-4 - 8 * x + 3 * x ** 2 + 4 * x ** 3) / 10
 
-def cube(x):
-    return x ** 3
-def grad_cube(x):
-    return 3 * x ** 2
+#TODO: NB i am not sure using these 2 functions is a good idea, computing their loss function might be too confusing for the students
+#
+# # Cubic function: has no minima, either global nor minimum TODO: dangerous computation of its loss!!!
+# def cube(x):
+#     return x ** 3
+# def grad_cube(x):
+#     return 3 * x ** 2
 
-def deep_cubic(x):
-    return x ** 3 - 4 * x
-def grad_deep_cubic(x):
-    return 3* x ** 2 - 4 
+# # Another cubic function that has no global minimum but a local one
+# def deep_cubic(x):
+#     return x ** 3 - 4 * x
+# def grad_deep_cubic(x):
+#     return 3* x ** 2 - 4 
 
 # Should we change the function every 5 simulations? Every 3 simulations?
-change_every = 1
+change_every = 3
+fs = [shifted_squared, square_sin, absolute, double_valley]#, cube, deep_cubic] 
+grads = [grad_shifted_squared, grad_square_sin, grad_absolute, grad_double_valley]#, grad_cube, grad_deep_cubic] 
 
 class GradientDescent:
     def __init__(self, X_MIN, X_MAX, sim_counter, n_pts = 500, max_iter = 15):
@@ -62,8 +68,8 @@ class GradientDescent:
         self.simulation_counter = sim_counter# count how many times the user runs the simulation
 
         # Defining the convex functions we will be working with
-        self.all_fs = [shifted_squared, square_sin, absolute, double_valley, cube, deep_cubic] 
-        self.all_grad_fs = [grad_shifted_squared, grad_square_sin, grad_absolute, grad_double_valley, grad_cube, grad_deep_cubic] 
+        self.all_fs = fs
+        self.all_grad_fs = grads
         # We loop over all functions to get a different one every X run of simulation (X set by change_every)
         self.f = self.all_fs[(sim_counter // change_every) % len(self.all_fs)]
         self.grad_f = self.all_grad_fs[(sim_counter // change_every) % len(self.all_fs)]
@@ -124,255 +130,6 @@ class GradientDescent:
             self.set_true_min()
         return abs(self.f(x) - self.f(self.true_min))
     
-    
-    # def plot_iterations_and_loss(self):
-    #     """Plot the function f and the iterative steps of the proposed algorithm, along with the corresponding losses"""
-        
-    #     # Create subplot layout (1 row, 2 columns)
-    #     fig = make_subplots(rows=1, cols=2, subplot_titles=("Gradient Descent Path", "Loss Curve")) #TODO: i thought of explaining in the titles what they represent but i think it gives too many hints
-
-    #     # ===== Left subplot: f(x) + GD path =====
-        
-    #     # f(x)
-    #     x = np.linspace(self.X_MIN, self.X_MAX, self.n_pts)
-    #     fig.add_trace(
-    #         go.Scatter(
-    #             x=x,
-    #             y=self.f(x),
-    #             mode="lines",
-    #             name="f(x)",
-    #             line=dict(color="lightgray"),
-    #         ),
-    #         row=1, col=1
-    #     )
-        
-    #     # top boundary of green goal area (loss between 0 and 0.05)
-    #     fig.add_trace(
-    #         go.Scatter(
-    #             x=x,
-    #             y=[self.f(self.true_min) + 0.05] * self.n_pts ,
-    #             fill=None,
-    #             mode='lines',
-    #             line=dict(width=0),
-    #             showlegend=False,
-    #             hoverinfo='skip'
-    #         ),
-    #         row=1, col=1
-    #     )
-    #     # bottom boundary of green goal area
-    #     fig.add_trace(
-    #         go.Scatter(
-    #             x=x,
-    #             y=[self.f(self.true_min) - 0.05] * self.n_pts,
-    #             fill='tonexty',
-    #             mode='lines',
-    #             line=dict(width=0),
-    #             fillcolor='rgba(144, 238, 144, 0.3)',  # light green with transparency
-    #             showlegend=False,
-    #             hoverinfo='skip'
-    #         ),
-    #         row=1, col=1
-    #     )
-        
-    #     # Circle around true minimum on f 
-    #     fig.add_trace(
-    #         go.Scatter(
-    #             x=[self.true_min],
-    #             y=[self.f(self.true_min)],
-    #             mode='markers',
-    #             marker=dict(
-    #                 size=7,
-    #                 color='rgba(144, 238, 144, 0.5)',  # light green with transparency
-    #                 line=dict(color='lightgreen', width=2)
-    #             ),
-    #             name='Minimum',
-    #             showlegend=False,
-    #             hoverinfo='skip'
-    #         ),
-    #         row=1, col=1
-    #     )
-        
-    #     # GD path
-    #     fig.add_trace(
-    #         go.Scatter(
-    #             x=[self.df_gd['a_ns'].iloc[0]],
-    #             y=[self.df_gd['f_a_ns'].iloc[0]],
-    #             mode="markers",
-    #             marker=dict(color="red", size=7),
-    #             name="GD Path"
-    #         ),
-    #         row=1, col=1
-    #     )
-
-    #     # ===== Right subplot: Loss curve =====
-        
-    #     # loss curve
-    #     fig.add_trace(
-    #         go.Scatter(
-    #             x=[],
-    #             y=[],
-    #             mode="markers+lines",
-    #             marker=dict(color="red", size=7),
-    #             name="Loss"
-    #         ),
-    #         row=1, col=2
-    #     )
-        
-    #     # top boundary of green goal area (loss between 0 and 0.05)
-    #     fig.add_trace(
-    #         go.Scatter(
-    #             x=[self.df_gd['iteration'].min() - 1, self.df_gd['iteration'].max() + 1],
-    #             y=[0.05, 0.05],
-    #             fill=None,
-    #             mode='lines',
-    #             line=dict(width=0),
-    #             showlegend=False,
-    #             hoverinfo='skip'
-    #         ),
-    #         row=1, col=2
-    #     )
-    #     # bottom boundary of green goal area
-    #     fig.add_trace(
-    #         go.Scatter(
-    #             x=[self.df_gd['iteration'].min() - 1, self.df_gd['iteration'].max() + 1],
-    #             y=[0, 0],
-    #             fill='tonexty',
-    #             mode='lines',
-    #             line=dict(width=0),
-    #             fillcolor='rgba(144, 238, 144, 0.3)',  # light green with transparency
-    #             showlegend=False,
-    #             hoverinfo='skip'
-    #         ),
-    #         row=1, col=2
-    #     )
-
-    #     # ===== Frames: update ALL traces =====
-    #     frames = []
-    #     for i in self.df_gd['iteration'].unique():
-    #         frames.append(
-    #             go.Frame(
-    #                 data=[
-    #                     # Trace 0: Keep the function line unchanged
-    #                     go.Scatter(x=x, y=self.f(x)),
-    #                     # Trace 1: Keep the green circle unchanged
-    #                     go.Scatter(
-    #                         x=[self.true_min],
-    #                         y=[self.f(self.true_min)],
-    #                         mode='markers',
-    #                         marker=dict(
-    #                             size=7,
-    #                             color='rgba(144, 238, 144, 0)',
-    #                             line=dict(color='lightgreen', width=2)
-    #                         )
-    #                     ),
-    #                     # Trace 1.1: Keep green band top line unchanged
-    #                     go.Scatter(
-    #                         x=x,
-    #                         y=[self.f(self.true_min) + 0.05] * self.n_pts,
-    #                         fill=None,
-    #                         mode='lines',
-    #                         line=dict(width=0)
-    #                     ),
-    #                     # Trace 1.2: Keep green band bottom line unchanged
-    #                     go.Scatter(
-    #                         x=x,
-    #                         y=[self.f(self.true_min) - 0.05] * self.n_pts,
-    #                         fill='tonexty',
-    #                         mode='lines',
-    #                         line=dict(width=0),
-    #                         fillcolor='rgba(144, 238, 144, 0.3)'
-    #                     ),
-    #                     # Trace 2: Update GD points
-    #                     go.Scatter(
-    #                         x=self.df_gd.loc[self.df_gd['iteration'] <= i, 'a_ns'],
-    #                         y=self.df_gd.loc[self.df_gd['iteration'] <= i, 'f_a_ns'],
-    #                         marker=dict(color="red", size=7)
-    #                     ),
-    #                     # Trace 3: Update loss curve
-    #                     go.Scatter(
-    #                         x=self.df_gd.loc[self.df_gd['iteration'] <= i, 'iteration'],
-    #                         y=self.df_gd.loc[self.df_gd['iteration'] <= i, 'losses'],
-    #                         mode="markers+lines",
-    #                         marker=dict(color="red", size=7)
-    #                     ),
-    #                     # Trace 4.1: Keep green band top line unchanged
-    #                     go.Scatter(
-    #                         x=[self.df_gd['iteration'].min() - 1, self.df_gd['iteration'].max() + 1],
-    #                         y=[0.05, 0.05],
-    #                         fill=None,
-    #                         mode='lines',
-    #                         line=dict(width=0)
-    #                     ),
-    #                     # Trace 4.2: Keep green band bottom line unchanged
-    #                     go.Scatter(
-    #                         x=[self.df_gd['iteration'].min() - 1, self.df_gd['iteration'].max() + 1],
-    #                         y=[0, 0],
-    #                         fill='tonexty',
-    #                         mode='lines',
-    #                         line=dict(width=0),
-    #                         fillcolor='rgba(144, 238, 144, 0.3)'
-    #                     )
-    #                 ],
-    #                 name=str(i)
-    #             )
-    #         )
-
-    #     fig.frames = frames
-
-    #     # ===== Layout with shared controls =====
-    #     fig.update_layout(
-    #         height=700,
-    #         #title="Gradient Descent Animation",
-    #         xaxis=dict(range=[self.X_MIN - 0.2, self.X_MAX + 0.2], title="x"),
-    #         yaxis=dict(range=[min(self.f(x)) - 0.3, max(self.f(x)) + 0.3], title="f(x)"),
-    #         xaxis2=dict(range=[-1, self.max_iter], title="Iteration"),
-    #         yaxis2=dict(range=[-0.1, max(self.df_gd['losses']) + 0.1], title="Loss"),
-    #         showlegend=False,
-    #         updatemenus=[{
-    #             'type': 'buttons',
-    #             'showactive': False,
-    #             'buttons': [
-    #                 {
-    #                     'label': 'Play',
-    #                     'method': 'animate',
-    #                     'args': [None, {
-    #                         'frame': {'duration': 600, 'redraw': True},
-    #                         'fromcurrent': True,
-    #                         'transition': {'duration': 200}
-    #                     }]
-    #                 },
-    #                 {
-    #                     'label': 'Pause',
-    #                     'method': 'animate',
-    #                     'args': [[None], {
-    #                         'frame': {'duration': 0, 'redraw': False},
-    #                         'mode': 'immediate',
-    #                         'transition': {'duration': 0}
-    #                     }]
-    #                 }
-    #             ]
-    #         }],
-    #         sliders=[{
-    #             'steps': [
-    #                 {
-    #                     'args': [[str(i)], {
-    #                         'frame': {'duration': 0, 'redraw': True},
-    #                         'mode': 'immediate'
-    #                     }],
-    #                     'label': str(i),
-    #                     'method': 'animate'
-    #                 }
-    #                 for i in self.df_gd['iteration'].unique()
-    #             ],
-    #             'transition': {'duration': 200},
-    #             'x': 0,
-    #             'y': -0.2,
-    #             'currentvalue': {'prefix': 'Iteration: '}
-    #         }]
-    #     )
-        
-    #     return fig 
-
 
     def plot_iterations_and_loss(self):
         """Plot the function f and the iterative steps of the proposed algorithm, along with the corresponding losses"""

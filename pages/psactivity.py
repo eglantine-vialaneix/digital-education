@@ -1,10 +1,12 @@
 # app.py
 import streamlit as st
-from pages.src.GradientDescent import GradientDescent
+from pages.src.GradientDescent import GradientDescent, shifted_squared, grad_shifted_squared, square_sin, grad_square_sin, absolute, grad_absolute, double_valley, grad_double_valley
 import random
 import numpy as np
+import plotly.graph_objects as go #TODO: remove plotting function from this file -> all in utils or src
 import time
 from pages.src.utils import assign_condition
+
 
 ###################### CONSTANTS AND UTILS ######################
 if 'X_MIN' not in st.session_state:
@@ -21,6 +23,9 @@ if 'ETA_MAX' not in st.session_state:
 
 if 'simulation_counter' not in st.session_state:
     st.session_state.simulation_counter = 0
+    
+if 'attempts' not in st.session_state:
+    st.session_state.attempts = 0
 
 TIME_LIMIT_MINUTES = 15
 ###################### STREAMLIT APP ######################
@@ -98,10 +103,121 @@ if "PSI" in st.session_state and st.session_state.PSI is not None:
 
 
 
-        # Activity is not over yet:
+        ####################### Activity is not over yet###################
     else:
 
         st.title("Find your way down the mountain!") 
+
+
+
+        ################## HARD EXERCICE: START OF IMPLEMENTATION TODO ################
+
+        ############# DISCOVERY PUZZLE: Find an update rule ###########
+        st.markdown("### Challenge: Find a way to reach the minimum")
+        st.markdown(
+            "Using only the function **f**, an initial point **a₀**, and a step size **η**, "
+            "design an update rule that repeatedly moves you toward the minimum. "
+            "_Clue: the **name** of the algorithm might help._"
+        )
+
+        st.markdown("### Please pick a functinon f(x) to optimize:")
+
+        # Let the learner pick the function silently (same ones you use later)
+        function_catalog = {
+            "x**2 + 0.5*x": (shifted_squared, grad_shifted_squared),
+            "x*x + 0.1*sin(10*x)": (square_sin, grad_square_sin),
+            "abs(x)": (absolute, grad_absolute),
+        }
+
+        col_fx, col_rng = st.columns([1.4, 1])
+        with col_fx:
+            puzzle_choice = st.selectbox("Pick a landscape f(x)", list(function_catalog.keys()), key="puzzle_fx")
+
+        p_f, p_true_grad = function_catalog[puzzle_choice]
+
+        # Ask them for a "direction term" D(x), not the full update
+        st.markdown(
+            r"Propose a **direction** $D(x)$ for an update rule like $a_{n+1}=a_n + \eta\,D(a_n)$."
+        )
+        user_dir_expr = st.text_input(
+            "Type D(x) — e.g., x, -(2*x+0.5), 2*x+np.cos(10*x)",
+            placeholder="Your direction term D(x)"
+        )
+
+        eta_try = st.number_input("η to test", min_value=1e-4, max_value=1e2, value=1e0, step=1e-4, format="%.4f")
+
+        def _safe_eval(expr, x_array, f_callable):
+            """Very restricted eval: allow only np, x, f (read-only)."""
+            allowed_globals = {"np": np, "__builtins__": {}}
+            allowed_locals = {"x": x_array, "f": f_callable}
+            return eval(expr, allowed_globals, allowed_locals)
+
+        def _test_rule(f, D_expr, a0, eta, n_steps=20, xmin=-2.5, xmax=2.5):
+            # simulate a_{n+1} = a_n + eta * D(a_n)
+            a_hist = [a0]
+            f_hist = [float(f(a0))]
+            try:
+                for _ in range(n_steps):
+                    a_n = a_hist[-1]
+                    Dn = float(_safe_eval(D_expr, np.array(a_n), f))
+                    a_next = a_n + eta * Dn
+                    a_next = float(np.clip(a_next, xmin, xmax))
+                    a_hist.append(a_next)
+                    f_hist.append(float(f(a_next)))
+                return np.array(a_hist), np.array(f_hist), None
+            except Exception as e:
+                return None, None, e
+
+        col_try1, col_try2 = st.columns([0.45, 1])
+        with col_try1:
+            a0_try = st.number_input("Pick a₀ for the test", value=float(-1.5), step=0.1, format="%.1f")
+        check_btn = st.button("Try my rule", type="primary", key="try_rule_btn")
+
+        if check_btn:
+            if not user_dir_expr.strip():
+                st.warning("Enter a direction D(x) to test.")
+            else:
+                a_hist, f_hist, err = _test_rule(
+                    p_f, user_dir_expr, a0_try, eta_try, n_steps=25
+                )
+                if err:
+                    st.error(f"Could not evaluate your rule. Tip: use only `x`, `f(x)`, numbers, + - * / **, and `np` functions. Error: {err}")
+                else:
+                    # Basic diagnostics
+                    decreases = np.diff(f_hist) < 0
+                    dec_ratio = decreases.mean()
+                    overall_drop = f_hist[0] - f_hist[-1]
+                    oscillates = np.any(np.sign(np.diff(a_hist))[1:] != np.sign(np.diff(a_hist))[:-1])
+
+                    # Verdict
+                    if overall_drop > 0 and dec_ratio > 0.6:
+                        st.success("Nice! Your rule generally moves downhill and reduces f(x).")
+                        st.session_state.attempts = 0
+                    elif overall_drop > 0:
+                        st.info("It sometimes goes down, but not consistently. You might refine the **direction** or **η**.")
+                        st.session_state.attempts += 1
+                    else:
+                        st.warning("It doesn't seem to reduce f(x) overall. Consider the direction of movement.")
+                        st.session_state.attempts += 1
+
+                    if st.session_state.attempts >= 3:
+                        with st.expander("Need a hint?"):
+                            st.markdown("- If a step **increases** f(x), your direction may point the **wrong way** at that x.")
+                            st.markdown("- Often, making η smaller can stabilize wild jumps.")
+
+                    if st.session_state.attempts >= 5:
+                        with st.expander("Stronger hint"):
+                            st.markdown("Ask yourself: *What local quantity tells you which way f increases fastest at x?* Then **go the other way**.")
+                    
+                    # Visualize trajectory on f(x)
+                    x_grid = np.linspace(-2.50, 2.50, 800)
+                    fig_p = go.Figure()
+                    fig_p.add_trace(go.Scatter(x=x_grid, y=p_f(x_grid), mode="lines", name="f(x)"))
+                    fig_p.add_trace(go.Scatter(x=a_hist, y=f_hist, mode="markers+lines", name="your updates"))
+                    fig_p.update_layout(height=420, title="Your update rule: path over f(x)")
+                    st.plotly_chart(fig_p, use_container_width=True)
+
+        ################## HARD EXERCICE: END OF IMPLEMENTATION TODO ################
 
         st.markdown("You come up with this brilliant formula that you decide to call **Gradient Descent**:")
 

@@ -1,6 +1,6 @@
 #home.py
 import streamlit as st
-from pages.src.utils import assign_condition, embed_video
+from pages.src.utils import assign_condition, embed_video, assign_language
 
 
 # This page is intended to contain the context video
@@ -48,6 +48,11 @@ if "PSI" in st.session_state and st.session_state.PSI is not None:
                 options=["Bachelor - Year 1", "Bachelor - Year 2", "Bachelor - Year 3",
                         "Master - Year 1", "Master - Year 2", "PhD", "Other"]
             )
+            
+            preferred_language = st.selectbox("What is your preferred language?",
+                                              options=["English", "Français", "Italiano"])
+            if preferred_language:
+                st.session_state.prefered_language = assign_language(preferred_language)
             
             # Screening for prerequisite knowledge
             st.write("The following questions are not graded. They are only for us, to better understand the background you come with before our experiment. Remember that our tool is a learning tool, so we are here to teach you about a specific notion. This notion is very related with a few other that we might also teach you about during the experiment. We would simply like to assess that as well.")
@@ -132,5 +137,3 @@ pages=[
     st.Page("pages/psactivity.py", title="Problem-Solving"),
     st.Page("pages/posttest.py", title="How much did you learn today?"),
 ]
-
-#st.navigation(pages, position="top") -> something is werid: if i display the navigation then i cannot use switch_pages anymore ??

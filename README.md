@@ -26,6 +26,7 @@ LEFT TODO:
 
 - refine PS activity
   - remove all (plotting and other) functions from psactivity.py file -> into utils
+  - give hints of python functions for the 
   - force minimum number of characters for interpretation 
   - ideally make the labels disappear with the dots when going back in iterations
   - make labels clearer (in bold and bigger font)

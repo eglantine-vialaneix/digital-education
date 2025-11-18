@@ -2,6 +2,8 @@ import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
+import plotly.express as px
+from sympy import latex, sympify
 
 
 # CATALOGUE:
@@ -15,7 +17,7 @@ def grad_shifted_squared(x):
 
 # Oscillating square
 def square_sin(x):
-    return x * x + 0.1 * np.sin(10 * x)
+    return x ** 2 + 0.1 * np.sin(10 * x)
 def grad_square_sin(x):
     return 2 * x + np.cos(10 * x)
 
@@ -49,6 +51,7 @@ def grad_double_valley(x):
 change_every = 3
 fs = [shifted_squared, square_sin, absolute, double_valley]#, cube, deep_cubic] 
 grads = [grad_shifted_squared, grad_square_sin, grad_absolute, grad_double_valley]#, grad_cube, grad_deep_cubic] 
+fs_latex = ["x**2 + 0.5*x", "x ** 2 + 0.1 * sin(10 * x)", "abs(x)", "((x + 4) ** 4 - 15 * (x + 4) ** 3 + 80 * (x + 4) ** 2 - 180 * (x + 4) + 144) / 10"]
 
 class GradientDescent:
     def __init__(self, X_MIN, X_MAX, sim_counter, n_pts = 500, max_iter = 15):
@@ -70,10 +73,13 @@ class GradientDescent:
         # Defining the convex functions we will be working with
         self.all_fs = fs
         self.all_grad_fs = grads
+        self.all_fs_latex = [latex(sympify(f)) for f in fs_latex]
         # We loop over all functions to get a different one every X run of simulation (X set by change_every)
         self.f = self.all_fs[(sim_counter // change_every) % len(self.all_fs)]
         self.grad_f = self.all_grad_fs[(sim_counter // change_every) % len(self.all_fs)]
+        self.f_in_latex = self.all_fs_latex[(sim_counter // change_every) % len(self.all_fs_latex)]
         
+        # Useful variables to store for computations
         self.true_min = None # storing the true min value of the function for computations
         
 
@@ -83,10 +89,12 @@ class GradientDescent:
         self.eta = eta_value
         print(f"Using a learning rate eta η = {self.eta}")
 
+
     def set_a_0(self, a_0_value):
         """Set the initial point (a₀) to the given value."""
         self.a_0 = a_0_value
         print(f"Using the initial point a₀: {self.a_0}")
+
 
     def gradient_descent(self):
         # Checking requirements before running the algorithm
@@ -121,15 +129,26 @@ class GradientDescent:
         true_min = x[np.argmin(self.f(x))]
         return true_min # returns the x of the actual minimum, not f(x)
     
+    
     def set_true_min(self):
         self.true_min = self.find_min_f()
         #print(f"The actual minimum of f is at x = {self.true_min:.2f} with f(x) = {self.f(self.true_min):.2f}")
+    
     
     def compute_loss(self, x):
         if self.true_min is None:
             self.set_true_min()
         return abs(self.f(x) - self.f(self.true_min))
     
+
+    def plot_naked_function(self):
+        """Plot the shape of the current function to give insight on what the fucntion looks like"""
+
+        x = np.linspace(self.X_MIN, self.X_MAX, self.n_pts)
+        fig = px.line(x=x, y=self.f(x))
+        
+        return fig
+
 
     def plot_iterations_and_loss(self):
         """Plot the function f and the iterative steps of the proposed algorithm, along with the corresponding losses"""

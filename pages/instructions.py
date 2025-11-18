@@ -50,4 +50,3 @@ if "PSI" in st.session_state and "prefered_language" in st.session_state:
     else:
         next_page="pages/psactivity.py"
     embed_video(instructions_URL(st.session_state.PSI, st.session_state.prefered_language), next_page)
-    

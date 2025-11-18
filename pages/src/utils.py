@@ -75,3 +75,10 @@ def embed_video(video_url, next_page, waiting_time = 3):
         # Auto-refresh every second to update the countdown
         time.sleep(1)
         st.rerun()
+        
+lang_str_to_key = {"English":"EN", "Français":"FR", "Italiano": "IT"} 
+def assign_language(lang_str):
+    if lang_str not in lang_str_to_key:
+        st.error(f"The language you entered is not a valid choice. You have been assigned to English by default")
+        return "EN"
+    return lang_str_to_key[lang_str]

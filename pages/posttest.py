@@ -13,3 +13,5 @@ if "PSI" not in st.session_state:
         st.session_state.user_key = user_key
         st.session_state.PSI = assign_condition(user_key)
 
+st.markdown("Congratulations! You arrived home and your oven is safely off. Most importantly you learnt (we hope!) about Gradient Descent, and helped us running our experiment, so thanks a lot!")
+

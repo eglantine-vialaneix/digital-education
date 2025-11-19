@@ -1,9 +1,8 @@
 # app.py
 import streamlit as st
-from pages.src.GradientDescent import GradientDescent, shifted_squared, grad_shifted_squared, square_sin, grad_square_sin, absolute, grad_absolute, double_valley, grad_double_valley
+from pages.src.GradientDescent import GradientDescent
 import random
 import numpy as np
-import plotly.graph_objects as go #TODO: remove plotting function from this file -> all in utils or src
 import time
 from pages.src.utils import assign_condition
 
@@ -109,13 +108,12 @@ if "PSI" in st.session_state and st.session_state.PSI is not None:
     else:
 
         st.title("Find your way down the mountain!") 
-        st.markdown("You come up with this brilliant formula that you decide to call **Gradient Descent**:")
-
+        
         ############# USER INPUTS AND CURRENT FUNCTION #################
         
         GD = GradientDescent(st.session_state.X_MIN, st.session_state.X_MAX, st.session_state.simulation_counter)
         
-        colsetup1, colsetup2 = st.columns([0.6, 0.4])
+        colsetup1, colsetup2 = st.columns([0.6, 0.4], vertical_alignment="center")
         
         with colsetup2:
             st.markdown("##### You are currently on the mountain represented by the function:")
@@ -128,9 +126,10 @@ if "PSI" in st.session_state and st.session_state.PSI is not None:
 
         with colsetup1:
             ############# FORMULA #################
+            st.markdown("#### You come up with this brilliant formula that you decide to call **Gradient Descent**:")
             colintro1, colintro2 = st.columns(2)
-
             with colintro1:
+
                 st.latex(r'''
                 \begin{cases} 
                 a_0 \in \R \\
@@ -139,10 +138,11 @@ if "PSI" in st.session_state and st.session_state.PSI is not None:
                 ''')
 
             with colintro2:
-                st.markdown("- $a_0$ is your current coordinates \n- $\\eta$ is the size of your steps \n- Your goal is to find the minimum of f")
+                st.markdown("- $a_0$ is your starting point coordinates \n- $\\eta$ is the size of your steps \n- Your goal is to find the minimum of f")
 
-            st.markdown("However, you are not entirely sure if your formula always works… 😥 You must try different settings of the 2 parameters, and understand their effects! The floor is yours! Explore your method: when does it work?? 🧠")
+            st.markdown("However, you are not entirely sure if your formula always works… 😥 You must try different settings of the 2 parameters, and understand their effects! The floor is yours!")
             
+            st.subheader("Explore your method: when and why does it work❓")
             ########### initial term ###########
             if 'init_value' not in st.session_state:
                 st.session_state.init_value = -1.5
@@ -151,7 +151,7 @@ if "PSI" in st.session_state and st.session_state.PSI is not None:
             colinit0, colinit1, colinit2, colinit3, colinit4, colinit5, colinit6 = st.columns([0.6, 0.8, 1, 1, 1, 1, 1])
 
             with colinit0:
-                colinit0.markdown("#### a₀ =")
+                colinit0.markdown("#### a₀ =", width="content")
                 
             with colinit1:
                 st.text_input(
@@ -178,7 +178,7 @@ if "PSI" in st.session_state and st.session_state.PSI is not None:
                     st.session_state.init_value = 1.5
 
             with colinit6:
-                if st.button("Random", key="rand_a0", width="stretch"):
+                if st.button("Random", key="rand_a0", width="content"):
                     st.session_state.init_value = round(
                         random.uniform(st.session_state.X_MIN, st.session_state.X_MAX), 1
                     )
@@ -234,24 +234,27 @@ if "PSI" in st.session_state and st.session_state.PSI is not None:
         # 1. Compute the gradient if the function is new
         # 2. Compute the minimum number of steps possible
 
-        colusertext, colsimbutton = st.columns([0.3, 1])
 
         user_text = st.text_area(label="What do you think will happen?",
                                     width="stretch",
                                     placeholder="Your prediction here… (at least 75 characters)")
+        
+        colsimbutton, colinfomessage = st.columns([0.3, 1], vertical_alignment="center")
 
-        # Disable button if text is less than 50 characters
-        run_simulation = st.button("Let's try this!", 
-                                    type="primary", 
-                                    disabled=len(user_text) < 50)
-
-        if not run_simulation:
-            # Show character count and requirement message
-            char_count = len(user_text)
-            if char_count < 50:
-                st.info(f"Please write at least 75 characters to run the simulation. Current: {char_count}/75")
-            else:
-                st.success(f"Great! You've written {char_count} characters. Click the button to run!")
+        with colsimbutton:
+            # Disable button if text is less than 50 characters
+            run_simulation = st.button("Let's try this!", 
+                                        type="primary", 
+                                        disabled=len(user_text) < 50,
+                                        width="stretch")
+        with colinfomessage:
+            if not run_simulation:
+                # Show character count and requirement message
+                char_count = len(user_text)
+                if char_count < 50:
+                    st.info(f"Please write at least 75 characters to run the simulation. Current: {char_count}/75")
+                else:
+                    st.success(f"Great! Let's see how it goes. Click the button to run the simulation of your algorithm!")
         
         if run_simulation:
             reflection_text = st.text_area(label="Was your prediction correct? Why?",

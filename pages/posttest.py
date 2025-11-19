@@ -1,6 +1,15 @@
 import streamlit as st
 from pages.src.utils import assign_condition
 
+###################### STREAMLIT APP ######################
+
+st.set_page_config(page_title="Cauchy in Matterhorn",
+                   page_icon="src/assets/gd_icon.png",
+                   layout = "wide",
+                   )
+
+############################################################
+
 if "PSI" not in st.session_state:
     if "user_key" not in st.session_state:
         user_key = st.text_input(label="Please enter your personal key:",

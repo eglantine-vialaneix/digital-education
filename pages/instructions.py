@@ -3,6 +3,16 @@
 import streamlit as st
 from pages.src.utils import instructions_URL, assign_condition, embed_video
 
+###################### STREAMLIT APP ######################
+
+st.set_page_config(page_title="Cauchy in Matterhorn",
+                   page_icon="src/assets/gd_icon.png",
+                   layout = "wide",
+                   )
+
+############################################################
+
+
 # This page contains the instruction video 
 # It automatically adapts on the condition of the user, givne by their key
 

@@ -146,6 +146,7 @@ class GradientDescent:
 
         x = np.linspace(self.X_MIN, self.X_MAX, self.n_pts)
         fig = px.line(x=x, y=self.f(x))
+        fig.update_layout(margin=dict(l=0, r=0, t=0, b=0))
         
         return fig
 

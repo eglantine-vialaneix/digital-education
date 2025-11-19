@@ -2,12 +2,21 @@
 import streamlit as st
 from pages.src.utils import assign_condition, embed_video, assign_language
 
+###################### STREAMLIT APP ######################
+
+st.set_page_config(page_title="Cauchy in Matterhorn",
+                   page_icon="src/assets/gd_icon.png",
+                   layout = "wide",
+                   )
+
+############################################################
 
 # This page is intended to contain the context video
 # It will be used to ask the participants their private key, 
 # which not only assigns them to their condition (PS-I or I-PS)
 # but also acts as a password to direct them to the correct page (instructions first or PS activity first)
 # The key also allow us to same the user data in a pseudonymized fashion.
+
 
 if "PSI" not in st.session_state or st.session_state.PSI is None:
     user_key = st.text_input(label="Please enter your personal key:",

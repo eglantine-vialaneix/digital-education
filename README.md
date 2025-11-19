@@ -8,9 +8,9 @@ See web deployment at [Cauchy in Matterhorn](https://cauchy-in-matterhorn.stream
 LEFT TODO:
 
 
-- retrieve user data (from screening questionnaire, pretest, posttest and meta info like number of trials and time on task)(Eglantine)
-  - create google docs file OR st form
-  - test data retrieval into google sheets
+- retrieve user data (Eglantine)
+  - create st form for post and pre tests
+  - test data retrieval into supabase
 
 - ~~Embed the video instructions before the simulations and all (Eglantine):n~~
   - ~~in instructions: conditional instructions video (IPS vs PSI AND language)~~
@@ -25,14 +25,10 @@ LEFT TODO:
   - ~~conditional navigation based on PSIvsIPS~~
 
 - refine PS activity
-  - remove all (plotting and other) functions from psactivity.py file -> into utils
-  - give hints of python functions for the 
-  - force minimum number of characters for interpretation 
+  - ~~force minimum number of characters for interpretation~~
   - ideally make the labels disappear with the dots when going back in iterations
   - make labels clearer (in bold and bigger font)
-  - make the computation of the gradient as a new parameter
-    - only one exercice: have to write the function G + input a0 + input eta
-  - make better global instructions: your goal is NOT to find the globa minimum only, it is to discover HOW you can always (of most of the time) find it. Your goal is to find the RULE behind finding the minimum.
+  - ~~make better global instructions: your goal is NOT to find the globa minimum only, it is to discover HOW you can always (of most of the time) find it. Your goal is to find the RULE behind finding the minimum.~~
   - ~~repair plotting with number of iterations~~
   - ~~merge with Thomaz version~~
 

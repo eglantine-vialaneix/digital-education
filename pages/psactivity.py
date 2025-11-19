@@ -26,7 +26,7 @@ if 'simulation_counter' not in st.session_state:
 if 'attempts' not in st.session_state:
     st.session_state.attempts = 0
 
-TIME_LIMIT_MINUTES = 1
+TIME_LIMIT_MINUTES = 15
 ###################### STREAMLIT APP ######################
 
 st.set_page_config(page_title="Cauchy in Matterhorn",

@@ -4,7 +4,7 @@ from pages.src.GradientDescent import GradientDescent
 import random
 import numpy as np
 import time
-from pages.src.utils import assign_condition
+from pages.src.utils import assign_condition, save_prediction_and_clear_text
 
 
 ###################### CONSTANTS AND UTILS ######################
@@ -293,7 +293,8 @@ else:
                 run_simulation = st.button(try_labels[st.session_state.prefered_language], 
                                             type="primary", 
                                             disabled=len(user_text) < 50,
-                                            width="stretch")
+                                            width="stretch", 
+                                            ) #TODO: on_click=save_prediction_and_clear_text
             with colinfomessage:
                 if not run_simulation:
                     # Show character count and requirement message

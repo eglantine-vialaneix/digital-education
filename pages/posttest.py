@@ -1,5 +1,5 @@
 import streamlit as st
-from pages.src.utils import assign_condition
+from pages.src.utils import assign_condition, init_supabase, save_user_data_to_supabase
 
 ###################### STREAMLIT APP ######################
 
@@ -24,3 +24,6 @@ if "PSI" not in st.session_state:
 
 st.markdown("Congratulations! You arrived home and your oven is safely off. Most importantly you learnt (we hope!) about Gradient Descent, and helped us running our experiment, so thanks a lot!")
 
+if st.button("FIN"):
+    supabase = init_supabase()
+    save_user_data_to_supabase(supabase)

@@ -17,8 +17,13 @@ LEFT TODO:
 
 - timer before next step in context and instructions
 - retrieve time on tasks
+- display remaining time in tasks (tests and ps)
+- implement save_prediction in utils
 
 - translation of pre and post tests
+
+- add in screening test: have you ever had a class or an exam about ML OR GD?
+
 
 - ~~Embed the video instructions before the simulations and all (Eglantine):n~~
   - ~~in instructions: conditional instructions video (IPS vs PSI AND language)~~

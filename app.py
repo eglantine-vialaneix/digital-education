@@ -174,10 +174,10 @@ else:
                 st.session_state.age = age
                 st.session_state.study_domain = study_domain
                 st.session_state.study_level = study_level
-                st.session_state.function = function
-                st.session_state.derivative = derivative
-                st.session_state.gradient = gradient
-                st.session_state.recursion = recursion
+                st.session_state.pre_function = function
+                st.session_state.pre_derivative = derivative
+                st.session_state.pre_gradient = gradient
+                st.session_state.pre_recursion = recursion
                 
                 # Mark form as submitted
                 st.session_state.form_submitted = True

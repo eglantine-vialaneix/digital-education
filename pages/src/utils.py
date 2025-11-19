@@ -1,5 +1,6 @@
 import streamlit as st
 import time
+from supabase import create_client
 
 # We store all valid keys and their corresponding group
 # True = PS-I (treatment), False = I-PS (control)
@@ -82,3 +83,145 @@ def assign_language(lang_str):
         st.error(f"The language you entered is not a valid choice. You have been assigned to English by default")
         return "EN"
     return lang_str_to_key[lang_str]
+
+
+def save_prediction_and_clear_text(some_args):
+    """Calling this function when clicking on the simulation button in the PS activity
+    should save the user's input in the session_state and clear the current input"""
+    # TODO
+    raise NotImplementedError 
+
+
+@st.cache_resource
+def init_supabase():
+    url = st.secrets["SUPABASE_URL"]
+    key = st.secrets["SUPABASE_KEY"]
+    return create_client(url, key)
+
+
+
+all_data = {
+    # --- Metadata ---
+    "user_key",
+    "PSI",
+    "preferred_language",
+    "sex",
+    "age",
+    "study_domain",
+    "study_level",
+
+    # --- Screening scores ---
+    "pre_function",
+    "pre_derivative",
+    "pre_gradient",
+    "pre_recursion",
+
+    # --- Pre-test survey ---
+    "preq1",
+    "preq2",
+    "preq3",
+    "preq4",
+    "preq5",
+    "prescore",
+
+    # --- Time spent (INTERVAL) ---
+    "time_on_pretest",
+    "time_on_context",
+    "time_on_instructions",
+    "time_on_task",
+    "time_on_posttest",
+
+    # --- Simulation data ---
+    "sim_counter",
+    "answers",  # dict of predictions at each simulation
+
+    # --- Post-test survey ---
+    "postq1",
+    "postq2",
+    "postq3",
+    "postq4",
+    "postq5",
+    "postq6",
+    "postq7",
+    "postscore",
+
+    # --- Post-test scores ---
+    "post_function",
+    "post_derivative",
+    "post_gradient",
+    "post_recursion",
+}
+
+def save_user_data_to_supabase(supabase):
+    # data = {
+    #     # --- Metadata ---
+    #     "user_key": st.session_state.user_key,
+    #     "PSI": st.session_state.PSI,
+    #     "preferred_language": st.session_state.preferred_language,
+    #     "sex": st.session_state.sex,
+    #     "age": st.session_state.age,
+    #     "study_domain": st.session_state.study_domain,
+    #     "study_level": st.session_state.study_level,
+
+    #     # --- Screening scores ---
+    #     "pre_function": st.session_state.pre_function,
+    #     "pre_derivative": st.session_state.pre_derivative,
+    #     "pre_gradient": st.session_state.pre_gradient,
+    #     "pre_recursion": st.session_state.pre_recursion,
+
+    #     # --- Pre-test survey ---
+    #     "PREQ1": st.session_state.PREQ1,
+    #     "PREQ2": st.session_state.PREQ2,
+    #     "PREQ3": st.session_state.PREQ3,
+    #     "PREQ4": st.session_state.PREQ4,
+    #     "PREQ5": st.session_state.PREQ5,
+    #     "PRESCORE": st.session_state.PRESCORE,
+
+    #     # --- Time spent (INTERVAL) ---
+    #     "time_on_pretest": st.session_state.time_on_pretest,
+    #     "time_on_context": st.session_state.time_on_context,
+    #     "time_on_instructions": st.session_state.time_on_instructions,
+    #     "time_on_task": st.session_state.time_on_task,
+    #     "time_on_posttest": st.session_state.time_on_posttest,
+
+    #     # --- Simulation data ---
+    #     "sim_counter": st.session_state.sim_counter,
+    #     "answers": st.session_state.answers,  # dict of predictions at each simulation
+
+    #     # --- Post-test survey ---
+    #     "POSTQ1": st.session_state.POSTQ1,
+    #     "POSTQ2": st.session_state.POSTQ2,
+    #     "POSTQ3": st.session_state.POSTQ3,
+    #     "POSTQ4": st.session_state.POSTQ4,
+    #     "POSTQ5": st.session_state.POSTQ5,
+    #     "POSTQ6": st.session_state.POSTQ6,
+    #     "POSTQ7": st.session_state.POSTQ7,
+    #     "POSTSCORE": st.session_state.POSTSCORE,
+
+    #     # --- Post-test scores ---
+    #     "post_function": st.session_state.post_function,
+    #     "post_derivative": st.session_state.post_derivative,
+    #     "post_gradient": st.session_state.post_gradient,
+    #     "post_recursion": st.session_state.post_recursion,
+    # }
+
+    exported_data = {}
+    for data in all_data:
+        if data in st.session_state:
+            exported_data[data] = st.session_state[data]
+        else:
+            exported_data[data] = None
+            
+    try:
+        response = supabase.table("experiment_data").insert(exported_data).execute()
+
+        # Depending on your version, response may be:
+        # - a dict like {"data": [...], "status_code": 201}
+        # - a pydantic APIResponse with .data
+        st.success("User data saved successfully!")
+        return response
+
+    except Exception as e:
+        # This catches all Supabase & PostgREST errors
+        st.error(f"Error saving user data: {e.message}")
+        return None

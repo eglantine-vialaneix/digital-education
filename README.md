@@ -7,10 +7,14 @@ See web deployment at [Cauchy in Matterhorn](https://cauchy-in-matterhorn.stream
 
 LEFT TODO:
 
+- before testing: put navigation bar off
 
 - retrieve user data (Eglantine)
   - create st form for post and pre tests
   - test data retrieval into supabase
+
+- make the prediction text just below eta and a0
+
 
 - ~~Embed the video instructions before the simulations and all (Eglantine):n~~
   - ~~in instructions: conditional instructions video (IPS vs PSI AND language)~~

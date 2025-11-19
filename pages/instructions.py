@@ -31,28 +31,7 @@ if "PSI" not in st.session_state:
         st.session_state.PSI = assign_condition(user_key)
 
 
-st.markdown("What language do you prefer having the instructions in? 🌍")
 
-# Default video is in english
-if 'prefered_language' not in st.session_state:
-    st.session_state.prefered_language = "EN"
-
-coleng, colfr, colit = st.columns(3)   
-
-with coleng:
-    if st.button("English", width="stretch"):
-        st.session_state.prefered_language = "EN"  
-        st.rerun()
-
-with colfr:
-    if st.button("Français", width="stretch"):
-        st.session_state.prefered_language = "FR"  
-        st.rerun()
-
-with colit:
-    if st.button("Italiano", width="stretch"):
-        st.session_state.prefered_language = "IT" 
-        st.rerun() 
 
 if "PSI" in st.session_state and "prefered_language" in st.session_state:
     if st.session_state.PSI:

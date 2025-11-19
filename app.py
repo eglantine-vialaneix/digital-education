@@ -182,8 +182,7 @@ else:
                 # Mark form as submitted
                 st.session_state.form_submitted = True
                 
-                # Rerun to update the UI
-                st.rerun()
+                st.switch_page("pages/pretest.py")
                 
     # TODO: write the result of the screening questionnaire and pretest in the excel sheets
     # URL: https://docs.google.com/spreadsheets/d/1cioGHPbZ3bIyVZ7Hzy8dgdfcIZK6r7shRgpvgSajpdE/edit?gid=132239610#gid=132239610                    
@@ -219,6 +218,7 @@ else:
 
 pages=[
     st.Page("app.py", title="Login and tell us about yourself"),
+    st.Page("pages/pretest.py", title="Pre-test"),
     st.Page("pages/instructions.py", title="Learn about Gradient Descent"),
     st.Page("pages/psactivity.py", title="Problem-Solving"),
     st.Page("pages/posttest.py", title="How much did you learn today?"),

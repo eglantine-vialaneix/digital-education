@@ -29,6 +29,13 @@ lang = st.session_state.get("prefered_language", "EN")
 
 ###################### TEXT LABELS ########################
 
+error_labels = {
+    "EN": "Please answer **all** questions before continuing.",
+    "FR": "Merci de répondre à **toutes** les questions avant de continuer.",
+    "IT": "Per favore rispondi a **tutte** le domande prima di continuare.",
+}
+
+
 title_labels = {
     "EN": "Post-test",
     "FR": "Post-test",
@@ -362,6 +369,19 @@ if not st.session_state.posttest_submitted:
         submitted = st.form_submit_button(submit_labels[lang])
 
     if submitted:
+        missing = (
+        not map_answer.strip()
+        or not neg_grad_answer.strip()
+        or conv_answer is None
+        or zero_answer is None
+        or not loss_answer.strip()
+        or len(a0_answer) == 0
+        or len(eta_answer) == 0
+    )
+
+    if missing:
+        st.error(error_labels[lang])
+    else:
         st.session_state.posttest_answers = {
             "mapping_metaphor": map_answer,
             "negative_gradient_reason": neg_grad_answer,
@@ -378,8 +398,6 @@ else:
     st.success(success_labels[lang])
     st.markdown(congrats_text[lang])
 
-##############
-
-if st.button("FIN"):
-    supabase = init_supabase()
-    save_user_data_to_supabase(supabase)
+    if st.button("FIN"):
+        supabase = init_supabase()
+        save_user_data_to_supabase(supabase)

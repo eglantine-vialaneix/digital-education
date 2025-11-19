@@ -4,6 +4,12 @@ import streamlit as st
 
 lang = st.session_state.prefered_language
 
+error_labels = {
+    "EN": "Please answer **all** questions before continuing.",
+    "FR": "Merci de répondre à **toutes** les questions avant de continuer.",
+    "IT": "Per favore rispondi a **tutte** le domande prima di continuare.",
+}
+
 
 title_labels = {
     "EN": "Pre-test",
@@ -194,18 +200,31 @@ if not st.session_state.pretest_submitted:
         submitted = st.form_submit_button(submit_labels[lang])
 
     if submitted:
-        # Save everything in session_state
-        st.session_state.pretest_answers = {
-            "recursive_algorithm_mc": q1_answer,
-            "recursive_computation_a3": q2_answer,
-            "minimum_strategies": q3_answer,
-            "gradient_concept": q4_answer,
-            "loss_curve_interpretation": q5_answer,
-        }
-        st.session_state.pretest_submitted = True
-        st.success(success_labels[lang])
         
-        st.switch_page("pages/instructions.py")
+        # Validate: all must be non-empty
+        missing = (
+            q1_answer is None
+            or q1_answer == ""
+            or not q2_answer.strip()
+            or len(q3_answer) == 0
+            or not q4_answer.strip()
+            or not q5_answer.strip()
+        )
+
+        if missing:
+            st.error(error_labels[lang])
+        else:
+            # Save everything in session_state
+            st.session_state.pretest_answers = {
+                "recursive_algorithm_mc": q1_answer,
+                "recursive_computation_a3": q2_answer,
+                "minimum_strategies": q3_answer,
+                "gradient_concept": q4_answer,
+                "loss_curve_interpretation": q5_answer,
+            }
+            st.session_state.pretest_submitted = True
+            st.success(success_labels[lang])
+            st.switch_page("pages/instructions.py")
 
 else:
     st.success(success_labels[lang])

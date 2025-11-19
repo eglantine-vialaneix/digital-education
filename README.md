@@ -13,14 +13,14 @@ LEFT TODO:
   - create st form for post and pre tests
   - test data retrieval into supabase
 
-- make the prediction text just below eta and a0
+- ~~make the prediction text just below eta and a0~~
+
+- timer before next step in context and instructions
+- retrieve time on tasks
 
 
 - ~~Embed the video instructions before the simulations and all (Eglantine):n~~
   - ~~in instructions: conditional instructions video (IPS vs PSI AND language)~~
-- ITA: https://youtu.be/LLaubZsj0i4
-- ENG: https://youtu.be/jC6q_nrbnh0
-- FR: https://youtu.be/Jw-PE9NrOKI
   - ~~in home: conditional context video (PSI vs IPS) + language~~
   - redo french PS-I and I-PS video more slowly!!
   - ~~put all the correct video links for PS-I instruction video~~

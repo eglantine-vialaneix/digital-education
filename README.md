@@ -18,6 +18,7 @@ LEFT TODO:
 - timer before next step in context and instructions
 - retrieve time on tasks
 
+- translation of pre and post tests
 
 - ~~Embed the video instructions before the simulations and all (Eglantine):n~~
   - ~~in instructions: conditional instructions video (IPS vs PSI AND language)~~

@@ -225,22 +225,14 @@ if "PSI" in st.session_state and st.session_state.PSI is not None:
                     st.session_state.eta_value = min(options, key=lambda x: abs(x - random_value))
                     st.rerun()
 
-
-        ############# SIMULATION #################
-
-        # Simulation button
-        
-        # Before enabling the simulation button we ask the student to:
-        # 1. Compute the gradient if the function is new
-        # 2. Compute the minimum number of steps possible
-
-
-        user_text = st.text_area(label="What do you think will happen?",
-                                    width="stretch",
-                                    placeholder="Your prediction here… (at least 75 characters)")
-        
+            # Ask the student to predict what will happend given their parameters
+            user_text = st.text_area(label="What do you think will happen?",
+                                        width="stretch",
+                                        placeholder="Your prediction here… (at least 75 characters)")
+            
         colsimbutton, colinfomessage = st.columns([0.3, 1], vertical_alignment="center")
 
+        #Simulation button
         with colsimbutton:
             # Disable button if text is less than 50 characters
             run_simulation = st.button("Let's try this!", 
@@ -256,12 +248,13 @@ if "PSI" in st.session_state and st.session_state.PSI is not None:
                 else:
                     st.success(f"Great! Let's see how it goes. Click the button to run the simulation of your algorithm!")
         
+        # Ask for interpretation afterwards
         if run_simulation:
             reflection_text = st.text_area(label="Was your prediction correct? Why?",
                                         width="stretch",
                                         placeholder="Your interpretation here… (at least 75 characters)")
 
-        # Run simulation
+        ############# SIMULATION #################
         if run_simulation:
             try:
                 GD.set_a_0(st.session_state.init_value)

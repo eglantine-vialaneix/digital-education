@@ -21,9 +21,9 @@ LEFT TODO:
 - ITA: https://youtu.be/LLaubZsj0i4
 - ENG: https://youtu.be/jC6q_nrbnh0
 - FR: https://youtu.be/Jw-PE9NrOKI
-  - in home: conditional context video (PSI vs IPS) + language
-  - do french PS-I video
-  - put all the correct video links for PS-I instruction video
+  - ~~in home: conditional context video (PSI vs IPS) + language~~
+  - redo french PS-I and I-PS video more slowly!!
+  - ~~put all the correct video links for PS-I instruction video~~
 
 - ~~fix the new navigation sustem between pages~~
   - ~~conditional navigation based on PSIvsIPS~~

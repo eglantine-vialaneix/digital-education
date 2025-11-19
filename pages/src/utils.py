@@ -35,11 +35,11 @@ def assign_condition(key):
 # We match the user prefered language adn their PSI condition to the right intruction video
 # True = PS-I (treatment), False = I-PS (control)
 language_to_video_URL = {("EN", False): "https://youtu.be/jC6q_nrbnh0",
-                         ("FR", False): "https://youtu.be/Jw-PE9NrOKI",
+                         ("FR", False): "https://youtu.be/Jw-PE9NrOKI", #TODO: REDOOOOOO
                          ("IT", False): "https://youtu.be/LLaubZsj0i4",
-                         ("EN", True): "",
-                         ("FR", True): "",
-                         ("IT", True): ""}
+                         ("EN", True): "https://youtu.be/DiSFW9hD4RE",
+                         ("FR", True): "https://youtu.be/Jw-PE9NrOKI", #TODO: REDOOOOOO
+                         ("IT", True): "https://youtu.be/LLaubZsj0i4"}
 
 def instructions_URL(PSI, language="EN"):
     if (language, PSI) not in language_to_video_URL:

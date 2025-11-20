@@ -309,12 +309,12 @@ else:
     only_one_answer = {
         "EN": "Only one answer possible:",
         "FR": "Une seule réponse possible:",
-        "IT": ""} #TODO
+        "IT": "Solo una risposta possibile:"}
 
     multiple_answers = {
         "EN": "One or more answers possible:",
         "FR": "Une ou plusieurs réponses possibles:",
-        "IT": ""} #TODO
+        "IT": "Una o più risposte possibili:"}
 
 
     ###################### FORM LOGIC #########################
@@ -324,8 +324,7 @@ else:
 
     if not st.session_state.posttest_submitted:
         
-        placeholder = st.empty()
-        with placeholder.form("posttest_form", enter_to_submit=False):
+        with st.form("posttest_form", enter_to_submit=False):
 
             st.markdown(f"## {title_labels[lang]}")
             st.write(intro_labels[lang])
@@ -384,21 +383,79 @@ else:
             
         if submitted:
             st.session_state.posttest_submitted = True
-            st.session_state.posttest_answers = {
-                "mapping_metaphor": map_answer,
-                "negative_gradient_reason": neg_grad_answer,
-                "convergence_mcq": conv_answer,
-                "zero_gradient_mcq": zero_answer,
-                "loss_curve_interpretation": loss_answer,
-                "a0_influence": a0_answer,
-                "eta_control": eta_answer,
-            }
             
-            placeholder.empty()
+            st.session_state.postq1 = map_answer
+            st.session_state.postq2 = neg_grad_answer
+            st.session_state.postq3 = conv_answer
+            st.session_state.postq4 = zero_answer
+            st.session_state.postq5 = loss_answer
+            st.session_state.postq6 = a0_answer
+            st.session_state.postq7 = eta_answer
             
-            
+  
     else:        
-        st.success(success_labels[lang])
-        supabase = init_supabase()
-        save_user_data_to_supabase(supabase)
-        st.header(congrats_text[lang])
+        if "post_screening_submitted" not in st.session_state:
+            st.session_state.post_screening_submitted = False
+            
+        if not st.session_state.post_screening_submitted:
+            with st.form("post_screening"):
+                # Screening for acquired knowledge
+                disclaimers = {"EN":"Considering what you have seen with us today: 🧠",
+                                "FR":"En considérant ce que tu as vu avec nous aujourd'hui: 🧠", 
+                                "IT":"Considerando ciò che avete visto con noi oggi: 🧠"}
+                st.write(disclaimers[st.session_state.prefered_language])
+                
+                function_labels = {"EN":"How familiar are you with functions? (Do you know what a function is and some of their representations like graphs?)", 
+                                    "FR":"À quel point es-tu à l'aise avec la notion de fonction ? (Sais-tu ce qu'est une fonction and comment les représentater en graphes ?)", 
+                                    "IT":"Quanto ti consideri esperto con le funzioni? (Sai ​​cos'è una funzione e conosci delle sue rappresentazioni come ad esempio i grafici?)"} 
+                help_labels = {"EN":"1 = Not familiar at all, 5 = Very familiar", 
+                                "FR":"1 = Pas à l'aise du tout, 5 = Très à l'aise", 
+                                "IT":"1 = Non sono esperto per niente, 5 = Molto esperto"} 
+                function = st.slider(
+                    function_labels[st.session_state.prefered_language],
+                    min_value=1,
+                    max_value=5,
+                    value=None,
+                    help=help_labels[st.session_state.prefered_language]
+                )
+                derivative_labels = {"EN":"How familiar would you consider yourself regarding derivatives?", 
+                                        "FR":"À quel point es-tu à l'aise avec la notion de dérivée ?", 
+                                        "IT":"Quanto ti consideri esperto di derivate?"}
+                derivative = st.slider(
+                    derivative_labels[st.session_state.prefered_language],
+                    min_value=1,
+                    max_value=5,
+                    value=None,
+                    help=help_labels[st.session_state.prefered_language]
+                )
+                gradient_labels = {"EN":"How familiar would you consider yourself regarding gradients ($\\nabla f$)?", 
+                                    "FR":"À quel point es-tu à l'aise avec la notion de gradient ($\\nabla f$) ?", 
+                                    "IT":"Quanto ti consideri esperto di gradienti ($\\nabla f$)?"}
+                gradient = st.slider(
+                    gradient_labels[st.session_state.prefered_language],
+                    min_value=1,
+                    max_value=5,
+                    value=None,
+                    help=help_labels[st.session_state.prefered_language]
+                )
+                recursion_labels = {"EN":"How familiar are you with recursion and recursive formulas/algorithms?", 
+                                    "FR":"À quel point es-tu à l'aise avec la notion de récursion et d'algorithme et de formule récursive ?", 
+                                    "IT":"Quanto ti consideri esperto di ricorsione e formule/algoritmi ricorsivi?"}
+                recursion = st.slider(
+                    recursion_labels[st.session_state.prefered_language],
+                    min_value=1,
+                    max_value=5,
+                    value=None,
+                    help=help_labels[st.session_state.prefered_language]
+                )
+                
+                submit = st.form_submit_button()
+                
+                if submit:
+                    st.session_state.post_screening_submitted = True
+                
+        else:
+            st.success(success_labels[lang])
+            supabase = init_supabase()
+            save_user_data_to_supabase(supabase)
+            st.header(congrats_text[lang])

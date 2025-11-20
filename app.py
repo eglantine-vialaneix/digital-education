@@ -56,11 +56,11 @@ else:
     if "PSI" in st.session_state and st.session_state.PSI is not None:
 
         # Initialize form submission state if it doesn't exist
-        if 'form_submitted' not in st.session_state:
-            st.session_state.form_submitted = False
+        if 'screening_test_submitted' not in st.session_state:
+            st.session_state.screening_test_submitted = False
             
         # Only show the form if it hasn't been submitted
-        if not st.session_state.form_submitted:
+        if not st.session_state.screening_test_submitted:
             with st.form("screening_test", enter_to_submit=False):
                 
                 # Basic info
@@ -181,7 +181,7 @@ else:
                 st.session_state.pre_recursion = recursion
                 
                 # Mark form as submitted
-                st.session_state.form_submitted = True
+                st.session_state.screening_test_submitted = True
                 
           
         else:
@@ -193,27 +193,6 @@ else:
 
             if st.button("Next"):
                 st.switch_page("pages/pretest.py")
-
-
-            # context_labels = {"EN":"## Let's start! With a little bit of context… 👯", 
-            #                   "FR":"## C'est parti ! Commençons avec un peu de contexte… 👯", 
-            #                   "IT":"## Cominciamo! Con un po' di contesto... 👯"}
-            # st.markdown(context_labels[st.session_state.prefered_language])
-            
-            # if "PSI" not in st.session_state:
-            #     st.error(f"No PSI condition has been assigned yet.")
-            # elif st.session_state.PSI:
-            #     # display context video for PSI then move on to the PS activity
-            #     links_PSI_context = {"EN":"https://youtu.be/suYJGx3ailE", 
-            #                         "FR":"https://youtu.be/Dl2LnkoVPh4", 
-            #                         "IT":"https://youtu.be/gB9jlNKStK8"}
-            #     embed_video(links_PSI_context[st.session_state.prefered_language], 'pages/psactivity.py')
-            # else:
-            #     # display context video for IPS then move on to the instructions
-            #     links_IPS_context = {"EN":"https://youtu.be/fd5T80Pc4FY", 
-            #                         "FR":"https://youtu.be/lSq03w5jUZA", 
-            #                         "IT":"https://youtu.be/T6zZYfNv8Fs"}
-            #     embed_video(links_IPS_context[st.session_state.prefered_language], 'pages/instructions.py')
 
                 
 

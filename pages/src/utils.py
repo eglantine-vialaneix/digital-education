@@ -102,27 +102,28 @@ def init_supabase():
 
 all_data = {
     # --- Metadata ---
-    "user_key",
-    "PSI",
-    "preferred_language",
-    "sex",
-    "age",
-    "study_domain",
-    "study_level",
+    "user_key",#
+    "PSI",#
+    "prefered_language",#
+    "sex",#
+    "age",#
+    "study_domain",#
+    "study_level",#
 
     # --- Screening scores ---
-    "pre_function",
-    "pre_derivative",
-    "pre_gradient",
-    "pre_recursion",
+    "pre_function",#
+    "pre_derivative",#
+    "pre_gradient",#
+    "pre_recursion",#
+    "screening_test_submitted",#
 
     # --- Pre-test survey ---
-    "preq1",
-    "preq2",
-    "preq3",
-    "preq4",
-    "preq5",
-    "prescore",
+    "pretest_submitted",#
+    "preq1",#
+    "preq2",#
+    "preq3",#
+    "preq4",#
+    "preq5",#
 
     # --- Time spent (INTERVAL) ---
     "time_on_pretest",
@@ -132,24 +133,24 @@ all_data = {
     "time_on_posttest",
 
     # --- Simulation data ---
-    "sim_counter",
-    "answers",  # dict of predictions at each simulation
+    "simulation_counter", #
+    "answers",  ##### TODO dict of predictions at each simulation
 
     # --- Post-test survey ---
-    "postq1",
-    "postq2",
-    "postq3",
-    "postq4",
-    "postq5",
-    "postq6",
-    "postq7",
-    "postscore",
+    "posttest_submitted", #
+    "postq1", #
+    "postq2", #
+    "postq3", #
+    "postq4", #
+    "postq5", #
+    "postq6", #
+    "postq7", #
 
     # --- Post-test scores ---
-    "post_function",
-    "post_derivative",
-    "post_gradient",
-    "post_recursion",
+    "post_function", #TODO 
+    "post_derivative", #TODO 
+    "post_gradient", #TODO 
+    "post_recursion", #TODO 
 }
 
 def save_user_data_to_supabase(supabase):

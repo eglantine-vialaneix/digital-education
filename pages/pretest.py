@@ -161,12 +161,12 @@ success_labels = {
 only_one_answer = {
     "EN": "Only one answer possible:",
     "FR": "Une seule réponse possible:",
-    "IT": "È possibile una sola risposta:"} #TODO
+    "IT": "Solo una risposta possibile:"} 
 
 multiple_answers = {
     "EN": "One or more answers possible:",
     "FR": "Une ou plusieurs réponses possibles:",
-    "IT": "Una o più risposte possibili:"} #TODO
+    "IT": "Una o più risposte possibili:"} 
 
 # Submission state
 if "pretest_submitted" not in st.session_state:
@@ -174,7 +174,7 @@ if "pretest_submitted" not in st.session_state:
 
 # Only display form if not yet submitted
 if not st.session_state.pretest_submitted:
-    with st.form("pretest_form"):
+    with st.form("pretest_form", enter_to_submit=False):
 
         st.markdown(f"## {title_labels[lang]}")
         st.write(intro_labels[lang])
@@ -212,23 +212,12 @@ if not st.session_state.pretest_submitted:
 
     if submitted:
         # Save everything in session_state
-        st.session_state.pretest_answers = {
-            "recursive_algorithm_mc": q1_answer,
-            "recursive_computation_a3": q2_answer,
-            "minimum_strategies": q3_answer,
-            "gradient_concept": q4_answer,
-            "loss_curve_interpretation": q5_answer,
-        }
-        st.session_state.pretest_submitted = True
-        #st.success(success_labels[lang])
-        
-        # if "PSI" in st.session_state:
-        #     if st.session_state.PSI:
-        #         st.switch_page("pages/psactivity.py")
-        #     else:
-        #         st.switch_page("pages/instructions.py")
-            
-            
+        st.session_state.preq1 = q1_answer
+        st.session_state.preq2 = q2_answer
+        st.session_state.preq3 = q3_answer
+        st.session_state.preq4 = q4_answer
+        st.session_state.preq5 = q5_answer
+        st.session_state.pretest_submitted = True      
             
 
 else:

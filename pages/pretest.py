@@ -2,7 +2,7 @@ import streamlit as st
 
 ###################### PRETEST PAGE ######################
 
-lang = st.session_state.prefered_language
+lang = st.session_state.get("prefered_language", "EN")
 
 error_labels = {
     "EN": "Please answer **all** questions before continuing.",
@@ -224,7 +224,14 @@ if not st.session_state.pretest_submitted:
             }
             st.session_state.pretest_submitted = True
             st.success(success_labels[lang])
-            st.switch_page("pages/instructions.py")
+            
+            if "PSI" in st.session_state:
+                if st.session_state.PSI:
+                    st.switch_page("pages/psactivity.py")
+                else:
+                    st.switch_page("pages/instructions.py")
+            
+            
 
 else:
     st.success(success_labels[lang])

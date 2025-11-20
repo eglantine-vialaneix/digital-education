@@ -379,21 +379,21 @@ if not st.session_state.posttest_submitted:
         or len(eta_answer) == 0
     )
 
-    if missing:
-        st.error(error_labels[lang])
-    else:
-        st.session_state.posttest_answers = {
-            "mapping_metaphor": map_answer,
-            "negative_gradient_reason": neg_grad_answer,
-            "convergence_mcq": conv_answer,
-            "zero_gradient_mcq": zero_answer,
-            "loss_curve_interpretation": loss_answer,
-            "a0_influence": a0_answer,
-            "eta_control": eta_answer,
-        }
-        st.session_state.posttest_submitted = True
-        st.success(success_labels[lang])
-        st.markdown(congrats_text[lang])
+        if missing:
+            st.error(error_labels[lang])
+        else:
+            st.session_state.posttest_answers = {
+                "mapping_metaphor": map_answer,
+                "negative_gradient_reason": neg_grad_answer,
+                "convergence_mcq": conv_answer,
+                "zero_gradient_mcq": zero_answer,
+                "loss_curve_interpretation": loss_answer,
+                "a0_influence": a0_answer,
+                "eta_control": eta_answer,
+            }
+            st.session_state.posttest_submitted = True
+            st.success(success_labels[lang])
+            st.markdown(congrats_text[lang])
 else:
     st.success(success_labels[lang])
     st.markdown(congrats_text[lang])

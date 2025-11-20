@@ -153,58 +153,7 @@ all_data = {
 }
 
 def save_user_data_to_supabase(supabase):
-    # data = {
-    #     # --- Metadata ---
-    #     "user_key": st.session_state.user_key,
-    #     "PSI": st.session_state.PSI,
-    #     "preferred_language": st.session_state.preferred_language,
-    #     "sex": st.session_state.sex,
-    #     "age": st.session_state.age,
-    #     "study_domain": st.session_state.study_domain,
-    #     "study_level": st.session_state.study_level,
-
-    #     # --- Screening scores ---
-    #     "pre_function": st.session_state.pre_function,
-    #     "pre_derivative": st.session_state.pre_derivative,
-    #     "pre_gradient": st.session_state.pre_gradient,
-    #     "pre_recursion": st.session_state.pre_recursion,
-
-    #     # --- Pre-test survey ---
-    #     "PREQ1": st.session_state.PREQ1,
-    #     "PREQ2": st.session_state.PREQ2,
-    #     "PREQ3": st.session_state.PREQ3,
-    #     "PREQ4": st.session_state.PREQ4,
-    #     "PREQ5": st.session_state.PREQ5,
-    #     "PRESCORE": st.session_state.PRESCORE,
-
-    #     # --- Time spent (INTERVAL) ---
-    #     "time_on_pretest": st.session_state.time_on_pretest,
-    #     "time_on_context": st.session_state.time_on_context,
-    #     "time_on_instructions": st.session_state.time_on_instructions,
-    #     "time_on_task": st.session_state.time_on_task,
-    #     "time_on_posttest": st.session_state.time_on_posttest,
-
-    #     # --- Simulation data ---
-    #     "sim_counter": st.session_state.sim_counter,
-    #     "answers": st.session_state.answers,  # dict of predictions at each simulation
-
-    #     # --- Post-test survey ---
-    #     "POSTQ1": st.session_state.POSTQ1,
-    #     "POSTQ2": st.session_state.POSTQ2,
-    #     "POSTQ3": st.session_state.POSTQ3,
-    #     "POSTQ4": st.session_state.POSTQ4,
-    #     "POSTQ5": st.session_state.POSTQ5,
-    #     "POSTQ6": st.session_state.POSTQ6,
-    #     "POSTQ7": st.session_state.POSTQ7,
-    #     "POSTSCORE": st.session_state.POSTSCORE,
-
-    #     # --- Post-test scores ---
-    #     "post_function": st.session_state.post_function,
-    #     "post_derivative": st.session_state.post_derivative,
-    #     "post_gradient": st.session_state.post_gradient,
-    #     "post_recursion": st.session_state.post_recursion,
-    # }
-
+    """ This function saves all user data at the end of the experiment in our supabase table"""
     exported_data = {}
     for data in all_data:
         if data in st.session_state:
@@ -215,9 +164,6 @@ def save_user_data_to_supabase(supabase):
     try:
         response = supabase.table("experiment_data").insert(exported_data).execute()
 
-        # Depending on your version, response may be:
-        # - a dict like {"data": [...], "status_code": 201}
-        # - a pydantic APIResponse with .data
         st.success("User data saved successfully!")
         return response
 

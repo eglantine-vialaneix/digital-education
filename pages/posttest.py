@@ -398,7 +398,5 @@ else:
     else:
         st.success(success_labels[lang])
         st.markdown(congrats_text[lang])
-
-        if st.button("FIN"):
-            supabase = init_supabase()
-            save_user_data_to_supabase(supabase)
+        supabase = init_supabase()
+        save_user_data_to_supabase(supabase)

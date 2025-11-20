@@ -88,7 +88,6 @@ def assign_language(lang_str):
 def save_prediction_and_clear_text(user_text):
     """Calling this function when clicking on the simulation button in the PS activity
     should save the user's input in the session_state and clear the current input"""
-    print("function called")
     if "answers" not in st.session_state:
         st.session_state.answers = {}
     

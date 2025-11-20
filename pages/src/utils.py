@@ -158,6 +158,7 @@ all_data = {
     "post_derivative", #
     "post_gradient", #
     "post_recursion", #
+    "post_screening_submitted" #
 }
 
 def save_user_data_to_supabase(supabase):

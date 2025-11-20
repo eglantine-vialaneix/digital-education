@@ -453,6 +453,10 @@ else:
                 
                 if submit:
                     st.session_state.post_screening_submitted = True
+                    st.session_state.post_function = function
+                    st.session_state.post_derivative = derivative
+                    st.session_state.post_gradient = gradient
+                    st.session_state.post_recursion = recursion
                 
         else:
             st.success(success_labels[lang])

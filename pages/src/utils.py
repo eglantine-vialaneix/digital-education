@@ -154,10 +154,10 @@ all_data = {
     "postq7", #
 
     # --- Post-test scores ---
-    "post_function", #TODO 
-    "post_derivative", #TODO 
-    "post_gradient", #TODO 
-    "post_recursion", #TODO 
+    "post_function", #
+    "post_derivative", #
+    "post_gradient", #
+    "post_recursion", #
 }
 
 def save_user_data_to_supabase(supabase):

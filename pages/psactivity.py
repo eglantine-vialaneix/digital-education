@@ -280,7 +280,8 @@ else:
                                            "IT":"Inserisci qui la tua previsione... (almeno 75 caratteri)"}
                 user_text = st.text_area(label=prediction_labels[st.session_state.prefered_language],
                                             width="stretch",
-                                            placeholder=prediction_placeholders[st.session_state.prefered_language])
+                                            placeholder=prediction_placeholders[st.session_state.prefered_language],
+                                            key="user_prediction")
                 
             colsimbutton, colinfomessage = st.columns([0.4, 1], vertical_alignment="center")
 
@@ -294,7 +295,7 @@ else:
                                             type="primary", 
                                             disabled=len(user_text) < 50,
                                             width="stretch", 
-                                            ) #TODO: on_click=save_prediction_and_clear_text
+                                            on_click=save_prediction_and_clear_text, args=[user_text]) #TODO: 
             with colinfomessage:
                 if not run_simulation:
                     # Show character count and requirement message

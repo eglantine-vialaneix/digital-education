@@ -85,11 +85,18 @@ def assign_language(lang_str):
     return lang_str_to_key[lang_str]
 
 
-def save_prediction_and_clear_text(some_args):
+def save_prediction_and_clear_text(user_text):
     """Calling this function when clicking on the simulation button in the PS activity
     should save the user's input in the session_state and clear the current input"""
-    # TODO
-    raise NotImplementedError 
+    print("function called")
+    if "answers" not in st.session_state:
+        st.session_state.answers = {}
+    
+    # Save current prediction to session_state
+    st.session_state["answers"][st.session_state.simulation_counter] = user_text
+
+    # Clear text area
+    st.session_state["user_prediction"] = ""
 
 
 @st.cache_resource
@@ -134,7 +141,7 @@ all_data = {
 
     # --- Simulation data ---
     "simulation_counter", #
-    "answers",  ##### TODO dict of predictions at each simulation
+    "answers",  #
 
     # --- Post-test survey ---
     "posttest_submitted", #

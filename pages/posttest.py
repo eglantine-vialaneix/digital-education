@@ -449,7 +449,7 @@ else:
                     help=help_labels[st.session_state.prefered_language]
                 )
                 
-                submit = st.form_submit_button()
+                submit = st.form_submit_button("🏁🏁🏁")
                 
                 if submit:
                     st.session_state.post_screening_submitted = True

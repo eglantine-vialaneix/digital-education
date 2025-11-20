@@ -21,10 +21,8 @@ if "PSI" not in st.session_state:
     if user_key:
         st.session_state.user_key = user_key
         st.session_state.PSI = assign_condition(user_key)
-else:
-    
-    st.markdown("Congratulations! You arrived home and your oven is safely off. Most importantly you learnt (we hope!) about Gradient Descent, and helped us running our experiment, so thanks a lot!")
 
+else:
     # fallback to EN if not set
     lang = st.session_state.get("prefered_language", "EN")
 
@@ -308,16 +306,28 @@ else:
         "IT": "Congratulazioni! Sei arrivato/a a casa e il tuo forno è spento in sicurezza. Soprattutto, hai (speriamo!) imparato qualcosa sulla discesa del gradiente e ci hai aiutato a svolgere il nostro esperimento – grazie mille! 💙",
     }
 
+    only_one_answer = {
+        "EN": "Only one answer possible:",
+        "FR": "Une seule réponse possible:",
+        "IT": ""} #TODO
+
+    multiple_answers = {
+        "EN": "One or more answers possible:",
+        "FR": "Une ou plusieurs réponses possibles:",
+        "IT": ""} #TODO
+
+
     ###################### FORM LOGIC #########################
 
     if "posttest_submitted" not in st.session_state:
         st.session_state.posttest_submitted = False
 
-    st.markdown(f"## {title_labels[lang]}")
-    st.write(intro_labels[lang])
-
     if not st.session_state.posttest_submitted:
-        with st.form("posttest_form"):
+        st.markdown(f"## {title_labels[lang]}")
+        st.write(intro_labels[lang])
+        
+        placeholder = st.empty()
+        with placeholder.form("posttest_form", enter_to_submit=False):
 
             # Q1
             st.markdown(f"### {map_label[lang]}")
@@ -332,7 +342,7 @@ else:
             st.markdown(f"### {conv_label[lang]}")
             st.write(conv_question[lang])
             conv_answer = st.radio(
-                label="",
+                label=only_one_answer[lang],
                 options=conv_options[lang],
                 index=None,
             )
@@ -341,7 +351,7 @@ else:
             st.markdown(f"### {zero_label[lang]}")
             st.write(zero_question[lang])
             zero_answer = st.radio(
-                label="",
+                label=only_one_answer[lang],
                 options=zero_options[lang],
                 index=None,
             )
@@ -356,47 +366,60 @@ else:
             # Q6
             st.markdown(f"### {a0_label[lang]}")
             a0_answer = st.multiselect(
-                label="",
+                label=multiple_answers[lang],
                 options=a0_options[lang],
             )
 
             # Q7
             st.markdown(f"### {eta_label[lang]}")
             eta_answer = st.multiselect(
-                label="",
+                label=multiple_answers[lang],
                 options=eta_options[lang],
             )
 
+            # We allow the user to submit even if some questions are empty
+            # In case they did not have the time to finish the posttest in 10min
             submitted = st.form_submit_button(submit_labels[lang])
-
+            
         if submitted:
-            missing = (
-            not map_answer.strip()
-            or not neg_grad_answer.strip()
-            or conv_answer is None
-            or zero_answer is None
-            or not loss_answer.strip()
-            or len(a0_answer) == 0
-            or len(eta_answer) == 0
-        )
+            st.session_state.posttest_submitted = True
+            st.session_state.posttest_answers = {
+                "mapping_metaphor": map_answer,
+                "negative_gradient_reason": neg_grad_answer,
+                "convergence_mcq": conv_answer,
+                "zero_gradient_mcq": zero_answer,
+                "loss_curve_interpretation": loss_answer,
+                "a0_influence": a0_answer,
+                "eta_control": eta_answer,
+            }
+            
+            placeholder.empty()
+            
+            # Check if all questions have been answered:
+            # if st.form_submit_button(submit_labels[lang]):
 
-            if missing:
-                st.error(error_labels[lang])
-            else:
-                st.session_state.posttest_answers = {
-                    "mapping_metaphor": map_answer,
-                    "negative_gradient_reason": neg_grad_answer,
-                    "convergence_mcq": conv_answer,
-                    "zero_gradient_mcq": zero_answer,
-                    "loss_curve_interpretation": loss_answer,
-                    "a0_influence": a0_answer,
-                    "eta_control": eta_answer,
-                }
-                st.session_state.posttest_submitted = True
-                st.success(success_labels[lang])
-                st.markdown(congrats_text[lang])
-    else:
+            #     missing = (
+            #         not map_answer.strip()
+            #         or not neg_grad_answer.strip()
+            #         or conv_answer is None
+            #         or zero_answer is None
+            #         or not loss_answer.strip()
+            #         or len(a0_answer) == 0
+            #         or len(eta_answer) == 0
+            #     )
+
+            #     if missing:
+            #         st.error(error_labels[lang])
+            #         st.session_state.posttest_submitted = False
+            #     else:
+            #         st.session_state.posttest_submitted = True
+            
+    else:        
         st.success(success_labels[lang])
-        st.markdown(congrats_text[lang])
         supabase = init_supabase()
         save_user_data_to_supabase(supabase)
+        st.header(congrats_text[lang])
+    # else:
+    #     st.success(success_labels[lang])
+    #     st.markdown(congrats_text[lang])
+        

@@ -157,6 +157,16 @@ success_labels = {
     "IT": "Grazie! Le tue risposte al pre-test sono state salvate.",
 }
 
+only_one_answer = {
+    "EN": "Only one answer possible:",
+    "FR": "Une seule réponse possible:",
+    "IT": ""} #TODO
+
+multiple_answers = {
+    "EN": "One or more answers possible:",
+    "FR": "Une ou plusieurs réponses possibles:",
+    "IT": ""} #TODO
+
 # Submission state
 if "pretest_submitted" not in st.session_state:
     st.session_state.pretest_submitted = False
@@ -171,7 +181,7 @@ if not st.session_state.pretest_submitted:
         # Q1
         st.markdown(f"### {q1_labels[lang]}")
         q1_answer = st.radio(
-            label="",
+            label=only_one_answer[lang],
             options=q1_options[lang],
             index=None,
         )
@@ -184,7 +194,7 @@ if not st.session_state.pretest_submitted:
         # Q3
         st.markdown(f"### {q3_labels[lang]}")
         q3_answer = st.multiselect(
-            label="",
+            label=multiple_answers[lang],
             options=q3_options[lang],
             help=q3_help[lang],
         )
@@ -235,3 +245,24 @@ if not st.session_state.pretest_submitted:
 
 else:
     st.success(success_labels[lang])
+
+    context_labels = {"EN":"## Let's start! With a little bit of context… 👯", 
+                        "FR":"## C'est parti ! Commençons avec un peu de contexte… 👯", 
+                        "IT":"## Cominciamo! Con un po' di contesto... 👯"}
+    st.markdown(context_labels[st.session_state.prefered_language])
+    
+    if "PSI" not in st.session_state:
+        st.error(f"No PSI condition has been assigned yet.")
+    elif st.session_state.PSI:
+        # display context video for PSI then move on to the PS activity
+        links_PSI_context = {"EN":"https://youtu.be/suYJGx3ailE", 
+                             "FR":"https://youtu.be/Dl2LnkoVPh4", 
+                             "IT":"https://youtu.be/gB9jlNKStK8"}
+        embed_video(links_PSI_context[st.session_state.prefered_language], 'pages/psactivity.py')
+    else:
+        # display context video for IPS then move on to the instructions
+        links_IPS_context = {"EN":"https://youtu.be/fd5T80Pc4FY", 
+                             "FR":"https://youtu.be/lSq03w5jUZA", 
+                             "IT":"https://youtu.be/T6zZYfNv8Fs"}
+        embed_video(links_IPS_context[st.session_state.prefered_language], 'pages/instructions.py')
+

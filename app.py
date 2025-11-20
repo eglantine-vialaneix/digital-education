@@ -61,7 +61,7 @@ else:
             
         # Only show the form if it hasn't been submitted
         if not st.session_state.form_submitted:
-            with st.form("screening_and_pretest"):
+            with st.form("screening_test", enter_to_submit=False):
                 
                 # Basic info
                 intro_screening_test = {"EN":"Please answer these few questions about yourself:", 
@@ -75,9 +75,9 @@ else:
                             "IT":"Sesso:"}
                 
                 
-                sex_options = {"EN":["Male", "Female", "Prefer not to say"],
-                               "FR":["Femme", "Homme", "Préfère ne pas dire"],
-                               "IT":["Uomo", "Donna", "Preferisco non dirlo"]
+                sex_options = {"EN":["", "Female", "Male", "Prefer not to say"],
+                               "FR":["", "Femme", "Homme", "Préfère ne pas dire"],
+                               "IT":["", "Donna", "Uomo", "Preferisco non dirlo"]
                                 }
                 
                 sex = st.selectbox(
@@ -90,7 +90,8 @@ else:
                     age_labels[st.session_state.prefered_language],
                     min_value=16,
                     max_value=100,
-                    step=1
+                    step=1,
+                    value=None
                 )
                 
                 study_labels = {"EN":"Field of study:", 
@@ -101,11 +102,11 @@ else:
                 level_labels = {"EN":"Study level:", 
                                 "FR":"Niveau d'études:", 
                                 "IT":"Livello di istruzione"}
-                level_options = {"EN":["Bachelor - Year 1", "Bachelor - Year 2", "Bachelor - Year 3",
+                level_options = {"EN":["", "Bachelor - Year 1", "Bachelor - Year 2", "Bachelor - Year 3",
                                         "Master - Year 1", "Master - Year 2", "PhD", "Other"], 
-                                 "FR":["Bachelor - 1ère année", "Bachelor - 2ème année", "Bachelor - 3ème année",
+                                 "FR":["", "Bachelor - 1ère année", "Bachelor - 2ème année", "Bachelor - 3ème année",
                                         "Master - 1ère année", "Master - 2ème année", "Doctorat", "Autre"], 
-                                 "IT":["Triennale - Primo anno", "Triennale - Secondo anno", "Triennale - Terzo anno",
+                                 "IT":["", "Triennale - Primo anno", "Triennale - Secondo anno", "Triennale - Terzo anno",
                                         "Magistrale - Primo anno", "Magistrale  - Secondo anno", "Dottorato", "Altro"]}
                 study_level = st.selectbox(
                     level_labels[st.session_state.prefered_language],
@@ -128,7 +129,7 @@ else:
                     function_labels[st.session_state.prefered_language],
                     min_value=1,
                     max_value=5,
-                    value=3,
+                    value=None,
                     help=help_labels[st.session_state.prefered_language]
                 )
                 derivative_labels = {"EN":"How familiar would you consider yourself regarding derivatives?", 
@@ -138,7 +139,7 @@ else:
                     derivative_labels[st.session_state.prefered_language],
                     min_value=1,
                     max_value=5,
-                    value=3,
+                    value=None,
                     help=help_labels[st.session_state.prefered_language]
                 )
                 gradient_labels = {"EN":"How familiar would you consider yourself regarding gradients ($\\nabla f$)?", 
@@ -148,7 +149,7 @@ else:
                     gradient_labels[st.session_state.prefered_language],
                     min_value=1,
                     max_value=5,
-                    value=3,
+                    value=None,
                     help=help_labels[st.session_state.prefered_language]
                 )
                 recursion_labels = {"EN":"How familiar are you with recursion and recursive formulas/algorithms?", 
@@ -158,17 +159,17 @@ else:
                     recursion_labels[st.session_state.prefered_language],
                     min_value=1,
                     max_value=5,
-                    value=3,
+                    value=None,
                     help=help_labels[st.session_state.prefered_language]
                 )
                 
                 submission_labels = {"EN":"Submit my info. (You won't be able to change them anymore)", 
                                      "FR":"Soumettre mes informations. (Tu ne pourras plus les changer)", 
                                      "IT":"Invia le mie informazioni. (Non potrai più modificarle)"}
-                screening_and_pretest = st.form_submit_button(submission_labels[st.session_state.prefered_language])
+                screening_test = st.form_submit_button(submission_labels[st.session_state.prefered_language])
 
             # Check if form was submitted
-            if screening_and_pretest:
+            if screening_test:
                 # Store the form data in session state
                 st.session_state.sex = sex
                 st.session_state.age = age
@@ -182,11 +183,7 @@ else:
                 # Mark form as submitted
                 st.session_state.form_submitted = True
                 
-                st.switch_page("pages/pretest.py")
-                
-    # TODO: write the result of the screening questionnaire and pretest in the excel sheets
-    # URL: https://docs.google.com/spreadsheets/d/1cioGHPbZ3bIyVZ7Hzy8dgdfcIZK6r7shRgpvgSajpdE/edit?gid=132239610#gid=132239610                    
-                
+          
         else:
             # Form has been submitted, moving on to context
             ty_labels = {"EN":"Thank you! Your information has been submitted.", 
@@ -194,25 +191,29 @@ else:
                         "IT":"Grazie! Le tue informazioni sono state inviate."}
             st.success(ty_labels[st.session_state.prefered_language])
 
-            context_labels = {"EN":"## Let's start! With a little bit of context… 👯", 
-                              "FR":"## C'est parti ! Commençons avec un peu de contexte… 👯", 
-                              "IT":"## Cominciamo! Con un po' di contesto... 👯"}
-            st.markdown(context_labels[st.session_state.prefered_language])
+            if st.button("Next"):
+                st.switch_page("pages/pretest.py")
+
+
+            # context_labels = {"EN":"## Let's start! With a little bit of context… 👯", 
+            #                   "FR":"## C'est parti ! Commençons avec un peu de contexte… 👯", 
+            #                   "IT":"## Cominciamo! Con un po' di contesto... 👯"}
+            # st.markdown(context_labels[st.session_state.prefered_language])
             
-            if "PSI" not in st.session_state:
-                st.error(f"No PSI condition has been assigned yet.")
-            elif st.session_state.PSI:
-                # display context video for PSI then move on to the PS activity
-                links_PSI_context = {"EN":"https://youtu.be/suYJGx3ailE", 
-                                    "FR":"https://youtu.be/Dl2LnkoVPh4", 
-                                    "IT":"https://youtu.be/gB9jlNKStK8"}
-                embed_video(links_PSI_context[st.session_state.prefered_language], 'pages/psactivity.py')
-            else:
-                # display context video for IPS then move on to the instructions
-                links_IPS_context = {"EN":"https://youtu.be/fd5T80Pc4FY", 
-                                    "FR":"https://youtu.be/lSq03w5jUZA", 
-                                    "IT":"https://youtu.be/T6zZYfNv8Fs"}
-                embed_video(links_IPS_context[st.session_state.prefered_language], 'pages/instructions.py')
+            # if "PSI" not in st.session_state:
+            #     st.error(f"No PSI condition has been assigned yet.")
+            # elif st.session_state.PSI:
+            #     # display context video for PSI then move on to the PS activity
+            #     links_PSI_context = {"EN":"https://youtu.be/suYJGx3ailE", 
+            #                         "FR":"https://youtu.be/Dl2LnkoVPh4", 
+            #                         "IT":"https://youtu.be/gB9jlNKStK8"}
+            #     embed_video(links_PSI_context[st.session_state.prefered_language], 'pages/psactivity.py')
+            # else:
+            #     # display context video for IPS then move on to the instructions
+            #     links_IPS_context = {"EN":"https://youtu.be/fd5T80Pc4FY", 
+            #                         "FR":"https://youtu.be/lSq03w5jUZA", 
+            #                         "IT":"https://youtu.be/T6zZYfNv8Fs"}
+            #     embed_video(links_IPS_context[st.session_state.prefered_language], 'pages/instructions.py')
 
                 
 

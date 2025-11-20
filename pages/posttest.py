@@ -262,29 +262,29 @@ else:
     }
 
     eta_label = {
-        "EN": "7. In gradient descent, what does the parameter $\\eta$ (learning rate / step size) control?",
-        "FR": "7. En descente de gradient, que contrôle le paramètre $\\eta$ (taux d’apprentissage / taille du pas) ?",
-        "IT": "7. Nel Gradient Descent, cosa controlla il parametro $\\eta$ (velocità di apprendimento / dimensione del passo)?",
+        "EN": "7. In gradient descent, what does the parameter $\\eta$, eta (learning rate / step size) control?",
+        "FR": "7. En descente de gradient, que contrôle le paramètre $\\eta$, eta (taux d’apprentissage / taille du pas) ?",
+        "IT": "7. Nel Gradient Descent, cosa controlla il parametro $\\eta$, eta (velocità di apprendimento / dimensione del passo)?",
     }
 
     eta_options = {
         "EN": [
-            "A. A large $\\eta$ can cause oscillations or divergence instead of convergence.",
-            "B. A small $\\eta$ increases the number of iterations needed to converge.",
-            "C. Different values of $\\eta$ can cause different convergence trajectories on the same loss function.",
-            "D. $\\eta$ determines the direction in which the parameter moves at each iteration.",
+            "A. A large eta can cause oscillations or divergence instead of convergence.",
+            "B. A small eta increases the number of iterations needed to converge.",
+            "C. Different values of eta can cause different convergence trajectories on the same loss function.",
+            "D. Eta determines the direction in which the parameter moves at each iteration.",
         ],
         "FR": [
-            "A. Un $\\eta$ élevé peut provoquer des oscillations ou une divergence au lieu d’une convergence.",
-            "B. Un petit $\\eta$ augmente le nombre d’itérations nécessaires pour converger.",
-            "C. Des valeurs différentes de $\\eta$ peuvent entraîner des trajectoires de convergence différentes sur la même fonction de perte.",
-            "D. $\\eta$ détermine la direction dans laquelle le paramètre se déplace à chaque itération.",
+            "A. Un eta élevé peut provoquer des oscillations ou une divergence au lieu d’une convergence.",
+            "B. Un petit eta augmente le nombre d’itérations nécessaires pour converger.",
+            "C. Des valeurs différentes de eta peuvent entraîner des trajectoires de convergence différentes sur la même fonction de perte.",
+            "D. Eta détermine la direction dans laquelle le paramètre se déplace à chaque itération.",
         ],
         "IT": [
-            "A. Un $\\eta$ elevato può causare oscillazioni o divergenza anziché convergenza.",
-            "B. Un piccolo $\\eta$ aumenta il numero di iterazioni necessarie per convergere.",
-            "C. Valori diversi di $\\eta$ possono causare traiettorie di convergenza diverse sulla stessa funzione di perdita.",
-            "D. $\\eta$ determina la direzione in cui si muove il parametro a ogni iterazione.",
+            "A. Un eta elevato può causare oscillazioni o divergenza anziché convergenza.",
+            "B. Un piccolo eta aumenta il numero di iterazioni necessarie per convergere.",
+            "C. Valori diversi di eta possono causare traiettorie di convergenza diverse sulla stessa funzione di perdita.",
+            "D. Eta determina la direzione in cui si muove il parametro a ogni iterazione.",
         ],
     }
 

@@ -87,7 +87,7 @@ else:
         elapsed = (time.time() - st.session_state.start_time) / 60  # in minutes
         if elapsed >= TIME_LIMIT_MINUTES:
             st.session_state.activity_done = True
-
+            st.session_state.time_on_task = elapsed
         if st.session_state.PSI:
             NEXT_PAGE = "pages/instructions.py"
         else:

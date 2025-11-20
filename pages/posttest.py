@@ -323,11 +323,12 @@ else:
         st.session_state.posttest_submitted = False
 
     if not st.session_state.posttest_submitted:
-        st.markdown(f"## {title_labels[lang]}")
-        st.write(intro_labels[lang])
         
         placeholder = st.empty()
         with placeholder.form("posttest_form", enter_to_submit=False):
+
+            st.markdown(f"## {title_labels[lang]}")
+            st.write(intro_labels[lang])
 
             # Q1
             st.markdown(f"### {map_label[lang]}")
@@ -395,31 +396,9 @@ else:
             
             placeholder.empty()
             
-            # Check if all questions have been answered:
-            # if st.form_submit_button(submit_labels[lang]):
-
-            #     missing = (
-            #         not map_answer.strip()
-            #         or not neg_grad_answer.strip()
-            #         or conv_answer is None
-            #         or zero_answer is None
-            #         or not loss_answer.strip()
-            #         or len(a0_answer) == 0
-            #         or len(eta_answer) == 0
-            #     )
-
-            #     if missing:
-            #         st.error(error_labels[lang])
-            #         st.session_state.posttest_submitted = False
-            #     else:
-            #         st.session_state.posttest_submitted = True
             
     else:        
         st.success(success_labels[lang])
         supabase = init_supabase()
         save_user_data_to_supabase(supabase)
         st.header(congrats_text[lang])
-    # else:
-    #     st.success(success_labels[lang])
-    #     st.markdown(congrats_text[lang])
-        

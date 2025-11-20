@@ -1,6 +1,6 @@
 #home.py
 import streamlit as st
-from pages.src.utils import assign_condition, embed_video
+from pages.src.utils import assign_condition
 
 ###################### STREAMLIT APP ######################
 

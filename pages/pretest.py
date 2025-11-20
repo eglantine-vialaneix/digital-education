@@ -1,4 +1,5 @@
 import streamlit as st
+from pages.src.utils import embed_video
 
 ###################### PRETEST PAGE ######################
 
@@ -160,23 +161,23 @@ success_labels = {
 only_one_answer = {
     "EN": "Only one answer possible:",
     "FR": "Une seule réponse possible:",
-    "IT": ""} #TODO
+    "IT": "È possibile una sola risposta:"} #TODO
 
 multiple_answers = {
     "EN": "One or more answers possible:",
     "FR": "Une ou plusieurs réponses possibles:",
-    "IT": ""} #TODO
+    "IT": "Una o più risposte possibili:"} #TODO
 
 # Submission state
 if "pretest_submitted" not in st.session_state:
     st.session_state.pretest_submitted = False
 
-st.markdown(f"## {title_labels[lang]}")
-st.write(intro_labels[lang])
-
 # Only display form if not yet submitted
 if not st.session_state.pretest_submitted:
     with st.form("pretest_form"):
+
+        st.markdown(f"## {title_labels[lang]}")
+        st.write(intro_labels[lang])
 
         # Q1
         st.markdown(f"### {q1_labels[lang]}")
@@ -210,36 +211,23 @@ if not st.session_state.pretest_submitted:
         submitted = st.form_submit_button(submit_labels[lang])
 
     if submitted:
+        # Save everything in session_state
+        st.session_state.pretest_answers = {
+            "recursive_algorithm_mc": q1_answer,
+            "recursive_computation_a3": q2_answer,
+            "minimum_strategies": q3_answer,
+            "gradient_concept": q4_answer,
+            "loss_curve_interpretation": q5_answer,
+        }
+        st.session_state.pretest_submitted = True
+        #st.success(success_labels[lang])
         
-        # Validate: all must be non-empty
-        missing = (
-            q1_answer is None
-            or q1_answer == ""
-            or not q2_answer.strip()
-            or len(q3_answer) == 0
-            or not q4_answer.strip()
-            or not q5_answer.strip()
-        )
-
-        if missing:
-            st.error(error_labels[lang])
-        else:
-            # Save everything in session_state
-            st.session_state.pretest_answers = {
-                "recursive_algorithm_mc": q1_answer,
-                "recursive_computation_a3": q2_answer,
-                "minimum_strategies": q3_answer,
-                "gradient_concept": q4_answer,
-                "loss_curve_interpretation": q5_answer,
-            }
-            st.session_state.pretest_submitted = True
-            st.success(success_labels[lang])
+        # if "PSI" in st.session_state:
+        #     if st.session_state.PSI:
+        #         st.switch_page("pages/psactivity.py")
+        #     else:
+        #         st.switch_page("pages/instructions.py")
             
-            if "PSI" in st.session_state:
-                if st.session_state.PSI:
-                    st.switch_page("pages/psactivity.py")
-                else:
-                    st.switch_page("pages/instructions.py")
             
             
 

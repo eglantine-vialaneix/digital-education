@@ -212,6 +212,7 @@ draft.ipynb
 
 # DS_Store
 .DS_Store
+pages/src/.DS_Store
 
 # Streamlit secrets
 secrets.toml

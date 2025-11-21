@@ -1,31 +1,13 @@
 import streamlit as st
 import time
 from supabase import create_client
+import json
 
 # We store all valid keys and their corresponding group
 # True = PS-I (treatment), False = I-PS (control)
-key_to_condition = {"3199":True,
-                    "7537":False,
-                    "2223":True,
-                    "2267":False,
-                    "6040":True,
-                    "7799":False,
-                    "8107":True,
-                    "7784":False,
-                    "4539":True,
-                    "6528":False,
-                    "4936":True,
-                    "4750":False,
-                    "6579":True,
-                    "7829":False,
-                    "6445":True,
-                    "8953":False,
-                    "6285":True,
-                    "8287":False,
-                    "5252":True,
-                    "1104":False,
-                    "xpsi":True,  # These last 2 keys 
-                    "xips":False} # are for developers only
+# The last 2 keys: "xips" and "xpsi" are for developpers
+with open('key_and_conditions.json', 'r') as f:
+    key_to_condition = json.load(f)
 
 def assign_condition(key):
     if key not in key_to_condition:

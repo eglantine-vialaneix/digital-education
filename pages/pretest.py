@@ -1,5 +1,6 @@
 import streamlit as st
 from pages.src.utils import embed_video
+from PIL import Image
 
 ###################### PRETEST PAGE ######################
 
@@ -206,6 +207,8 @@ if not st.session_state.pretest_submitted:
 
         # Q5
         st.markdown(f"### {q5_labels[lang]}")
+        img = Image.open("pages/src/assets/loss_curves.png")
+        st.image(img, width="stretch")
         q5_answer = st.text_area(q5_prompt[lang])
 
         submitted = st.form_submit_button(submit_labels[lang])

@@ -1,5 +1,6 @@
 import streamlit as st
 from pages.src.utils import assign_condition, init_supabase, save_user_data_to_supabase
+from PIL import Image
 
 ###################### STREAMLIT APP ######################
 
@@ -358,6 +359,8 @@ else:
 
             # Q5
             st.markdown(f"### {loss_label[lang]}")
+            img = Image.open("pages/src/assets/loss_curves.png")
+            st.image(img, width="stretch")
             loss_answer = st.text_area(loss_prompt[lang])
 
             st.markdown("---")

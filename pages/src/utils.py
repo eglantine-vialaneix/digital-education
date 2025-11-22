@@ -6,7 +6,7 @@ import json
 # We store all valid keys and their corresponding group
 # True = PS-I (treatment), False = I-PS (control)
 # The last 2 keys: "xips" and "xpsi" are for developpers
-with open('key_and_conditions.json', 'r') as f:
+with open('key_and_condition.json', 'r') as f:
     key_to_condition = json.load(f)
 
 def assign_condition(key):

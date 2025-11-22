@@ -201,19 +201,13 @@ else:
 
     loss_prompt = {
         "EN": (
-            "Considering the loss curve(s) you saw (for example, one that overshoots with a learning rate $\\eta$ too large, "
-            "or one that starts very high because $a_0$ is far and decreases very slowly because $\\eta$ is too small), "
-            "describe what the curve reveals about the algorithm’s behavior."
+            "Considering the loss curve(s) you saw, describe what these two curves reveal about the algorithm’s behavior."
         ),
         "FR": (
-            "En te basant sur la ou les courbes de perte que tu as vues (par exemple, une courbe qui dépasse le minimum "
-            "avec un $\\eta$ trop grand, ou une courbe qui part très haut car $a_0$ est loin et diminue très lentement "
-            "car $\\eta$ est trop petit), décris ce que cette courbe révèle du comportement de l’algorithme."
+            "En te basant sur la ou les courbes de perte que tu as vues, décris ce que ces deux courbes révèlent du comportement de l’algorithme."
         ),
         "IT": (
-            "Considerando la curva (o le curve) di perdita che hai visto (ad esempio, una che supera il minimo perché $\\eta$ è troppo grande, "
-            "oppure una che parte molto alta perché $a_0$ è lontano e diminuisce molto lentamente perché $\\eta$ è troppo piccolo), "
-            "descrivi cosa rivela la curva sul comportamento dell'algoritmo."
+            "Considerando la curva (o le curve) di perdita che hai visto, descrivi cosa rivelano queste due curve sul comportamento dell'algoritmo."
         ),
     }
 

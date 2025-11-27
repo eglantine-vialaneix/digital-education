@@ -5,7 +5,7 @@ from pages.src.utils import assign_condition, init_supabase, save_user_data_to_s
 ###################### STREAMLIT APP ######################
 
 st.set_page_config(page_title="Cauchy in Matterhorn",
-                   page_icon="src/assets/gd_icon.png",
+                   page_icon="pages/src/assets/gd_icon.png",
                    layout = "wide",
                    )
 

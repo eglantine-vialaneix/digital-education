@@ -1,6 +1,6 @@
 #home.py
 import streamlit as st
-from pages.src.utils import assign_condition
+from pages.src.utils import assign_condition, init_supabase, save_user_data_to_supabase
 
 ###################### STREAMLIT APP ######################
 
@@ -185,12 +185,14 @@ else:
                 
           
         else:
-            # Form has been submitted, moving on to context
+            # Saving submitted form
             ty_labels = {"EN":"Thank you! Your information has been submitted.", 
                         "FR":"Merci! Tes informations ont bien été enregistrées.", 
                         "IT":"Grazie! Le tue informazioni sono state inviate."}
-            st.success(ty_labels[st.session_state.prefered_language])
+            supabase = init_supabase()
+            save_user_data_to_supabase(supabase, success_message=ty_labels[st.session_state.prefered_language])
 
+            # Form has been submitted, moving on to context
             if st.button("Next"):
                 st.switch_page("pages/pretest.py")
 

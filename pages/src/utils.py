@@ -75,6 +75,9 @@ def save_prediction_and_clear_text(user_text):
     
     # Save current prediction to session_state
     st.session_state["answers"][st.session_state.simulation_counter] = user_text
+    
+    #Additionnally save the user data to supabase
+    save_user_data_to_supabase(init_supabase(), verbose=False)
 
     # Clear text area
     st.session_state["user_prediction"] = ""
@@ -142,7 +145,7 @@ all_data = {
     "post_screening_submitted" #
 }
 
-def save_user_data_to_supabase(supabase):
+def save_user_data_to_supabase(supabase, verbose=True, success_message="User data saved successfully!"):
     """ This function saves all user data at the end of the experiment in our supabase table"""
     exported_data = {}
     for data in all_data:
@@ -153,11 +156,11 @@ def save_user_data_to_supabase(supabase):
             
     try:
         response = supabase.table("experiment_data").insert(exported_data).execute()
-
-        st.success("User data saved successfully!")
+        if verbose:
+            st.success(success_message)
         return response
 
     except Exception as e:
         # This catches all Supabase & PostgREST errors
-        st.error(f"Error saving user data: {e.message}")
+        st.error(f"Error saving user data, please show this message to the instructor: {e.message}")
         return None

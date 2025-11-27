@@ -389,6 +389,10 @@ else:
             st.session_state.postq6 = a0_answer
             st.session_state.postq7 = eta_answer
             
+
+            supabase = init_supabase()
+            save_user_data_to_supabase(supabase, verbose=False)
+            
   
     else:        
         if "post_screening_submitted" not in st.session_state:
@@ -454,9 +458,9 @@ else:
                     st.session_state.post_derivative = derivative
                     st.session_state.post_gradient = gradient
                     st.session_state.post_recursion = recursion
+                    
                 
         else:
-            st.success(success_labels[lang])
             supabase = init_supabase()
-            save_user_data_to_supabase(supabase)
+            save_user_data_to_supabase(supabase, success_message=success_labels[lang])
             st.header(congrats_text[lang])

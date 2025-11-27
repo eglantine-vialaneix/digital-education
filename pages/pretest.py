@@ -1,5 +1,5 @@
 import streamlit as st
-from pages.src.utils import embed_video
+from pages.src.utils import embed_video, init_supabase, save_user_data_to_supabase
 from PIL import Image
 
 ###################### PRETEST PAGE ######################
@@ -224,7 +224,9 @@ if not st.session_state.pretest_submitted:
             
 
 else:
-    st.success(success_labels[lang])
+    
+    supabase = init_supabase()
+    save_user_data_to_supabase(supabase, success_message=success_labels[lang])
 
     context_labels = {"EN":"## Let's start! With a little bit of context… 👯", 
                         "FR":"## C'est parti ! Commençons avec un peu de contexte… 👯", 

@@ -84,16 +84,18 @@ class GradientDescent:
         
 
 
-    def set_eta(self, eta_value):
+    def set_eta(self, eta_value, verbose=False):
         """Set the learning rate (eta) to the given value."""
         self.eta = eta_value
-        print(f"Using a learning rate eta η = {self.eta}")
+        if verbose:
+            print(f"Using a learning rate eta η = {self.eta}")
 
 
-    def set_a_0(self, a_0_value):
+    def set_a_0(self, a_0_value, verbose=False):
         """Set the initial point (a₀) to the given value."""
         self.a_0 = a_0_value
-        print(f"Using the initial point a₀: {self.a_0}")
+        if verbose:
+            print(f"Using the initial point a₀: {self.a_0}")
 
 
     def gradient_descent(self):
@@ -130,9 +132,10 @@ class GradientDescent:
         return true_min # returns the x of the actual minimum, not f(x)
     
     
-    def set_true_min(self):
+    def set_true_min(self, verbose=False):
         self.true_min = self.find_min_f()
-        #print(f"The actual minimum of f is at x = {self.true_min:.2f} with f(x) = {self.f(self.true_min):.2f}")
+        if verbose:
+            print(f"The actual minimum of f is at x = {self.true_min:.2f} with f(x) = {self.f(self.true_min):.2f}")
     
     
     def compute_loss(self, x):

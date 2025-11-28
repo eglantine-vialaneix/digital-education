@@ -7,22 +7,22 @@ See web deployment at [Cauchy in Matterhorn](https://cauchy-in-matterhorn.stream
 
 LEFT TODO:
 
-- before testing: put navigation bar off
-
-- retrieve user data (Eglantine)
-  - create st form for post and pre tests
-  - test data retrieval into supabase
-
-- ~~make the prediction text just below eta and a0~~
-
 - timer before next step in context and instructions
 - retrieve time on tasks
 - display remaining time in tasks (tests and ps)
 - implement save_prediction in utils
+  - dynamically save user input -> is that possible using streamlit? or should we do it in pure JS?
 
-- translation of pre and post tests
+- ~~before testing: put navigation bar off~~
 
-- add in screening test: have you ever had a class or an exam about ML OR GD?
+- ~~retrieve user data (Eglantine)~~
+  - ~~create st form for post and pre tests~~
+  - ~~test data retrieval into supabase~~
+
+- ~~make the prediction text just below eta and a0~~
+
+
+- ~~translation of pre and post tests~~
 
 
 - ~~Embed the video instructions before the simulations and all (Eglantine):n~~

@@ -84,7 +84,9 @@ def save_prediction_and_clear_text(user_text):
 
 
 @st.cache_resource
-def init_supabase():
+def init_supabase(disabled=True):
+    if disabled:
+        return None
     url = st.secrets["SUPABASE_URL"]
     key = st.secrets["SUPABASE_KEY"]
     return create_client(url, key)
@@ -145,8 +147,11 @@ all_data = {
     "post_screening_submitted" #
 }
 
-def save_user_data_to_supabase(supabase, verbose=True, success_message="User data saved successfully!"):
-    """ This function saves all user data at the end of the experiment in our supabase table"""
+def save_user_data_to_supabase(supabase, verbose=True, success_message="User data saved successfully!", disabled=True):
+    """ If enabled, this function saves all user data at the end of the experiment in our supabase table"""
+    if disabled:
+        return None
+    
     exported_data = {}
     for data in all_data:
         if data in st.session_state:
